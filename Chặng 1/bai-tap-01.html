@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        /* Bước 1: box-sizing cho toàn trang */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Bước 2: body — màu nền nhạt + font */
+        body {
+            background-color: #f5f5f5;
+            font-family: sans-serif;
+        }
+
+        /* Bước 3: mỗi article — nền trắng, padding, border, margin */
+        article {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        /* Bước 4: link trong nav — inline-block + padding để bấm vùng rộng */
+        nav a {
+            display: inline-block;
+            padding: 10px;
+        }
+
+        /* Bước 5: đổi màu chữ heading */
+        h1 {
+            color: #2c3e50;
+        }
+
+        h2 {
+            color: #2980b9;
+        }
+
+        /*
+         * Bước 6 — THỬ NGHIỆM box-sizing (đọc, đừng bỏ qua):
+         *
+         * Thêm width: 300px vào article rồi TẠM XÓA dòng box-sizing ở trên.
+         * Kéo rộng DevTools (F12 → tab Elements → chọn article → tab Computed).
+         * Bạn sẽ thấy: padding 20px cộng vào NGOÀI width → hộp rộng hơn 300px.
+         * Bật lại box-sizing: border-box → padding nằm BÊN TRONG width → hộp đúng 300px.
+         * Đó là lý do dòng * { box-sizing } luôn đặt đầu tiên trong mọi project.
+         */
+    </style>
+
+</head>
+<body>
+    <header>
+        <h1>Blog Cá Nhân</h1>
+        <nav>
+            <a href="/">Trang Chủ</a>
+            <a href="/">Giới Thiệu</a >
+            <a href="/">Liên Hệ</a>
+        </nav>
+    </header>
+
+    <main>
+        <article>
+            <h2>Bài viết số 1: Học HTML từ đầu</h2>
+            <p>HTML là ngôn ngữ đánh dấu tạo nên cấu trúc của mọi trang web. Hiểu HTML tốt giúp bạn viết CSS dễ hơn rất nhiều.</p>
+            <a href="/">Đọc tiếp</a>
+        </article>
+
+        <article>
+            <h2>Bài viết số 2: Tại sao semantic HTML quan trọng</h2>
+            <p>Dùng đúng thẻ semantic giúp Google hiểu trang của bạn, giúp người khiếm thị dùng được, và giúp code dễ đọc hơn.</p>
+            <a href="/">Đọc tiếp</a>
+        </article>
+    </main>
+
+    <aside>
+        <h2>Bài viết gần đây</h2>
+        <ul>
+            <li><a href="/">Học HTML từ đầu</a></li>
+            <li><a href="/">Tại sao semantic HTML quan trọng</a></li>
+            <li><a href="/">CSS là gì và dùng như thế nào</a></li>
+        </ul>
+    </aside>
+
+    <footer>
+        <p>&copy; 2026 Blog Cá Nhân. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập 04 — Grid</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: #f0f2f5;
+            padding: 24px;
+        }
+
+        h2 {
+            margin: 32px 0 12px;
+            color: #2c3e50;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Kiểu chung cho tất cả các ô */
+        .o {
+            background-color: #3498db;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80px;
+            border-radius: 4px;
+        }
+
+        /* =============================================
+           LƯỚI CƠ BẢN — 3 cột × 2 hàng
+           repeat(3, 1fr): 3 cột chia đều không gian
+           gap: 10px: khoảng cách giữa các ô
+           → 6 div tự xếp thành 3 cột × 2 hàng
+        ============================================= */
+        .grid-co-ban {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        /* =============================================
+           ĐỔI THÀNH 2 CỘT
+           Chỉ đổi repeat(3→2): 6 div thành 2 cột × 3 hàng
+        ============================================= */
+        .grid-2-cot {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        /* =============================================
+           Ô SPAN — một ô chiếm nhiều cột/hàng
+           grid-column: span 2 → ô đó trải rộng 2 cột
+        ============================================= */
+        .grid-span {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .grid-span .o-lon {
+            grid-column: span 2;   /* ô 1 trải sang 2 cột */
+            background-color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>3 cột × 2 hàng — repeat(3, 1fr)</h2>
+    <div class="grid-co-ban">
+        <div class="o">1</div>
+        <div class="o">2</div>
+        <div class="o">3</div>
+        <div class="o">4</div>
+        <div class="o">5</div>
+        <div class="o">6</div>
+    </div>
+
+    <h2>2 cột × 3 hàng — repeat(2, 1fr)</h2>
+    <div class="grid-2-cot">
+        <div class="o">1</div>
+        <div class="o">2</div>
+        <div class="o">3</div>
+        <div class="o">4</div>
+        <div class="o">5</div>
+        <div class="o">6</div>
+    </div>
+
+    <h2>Ô span — ô đầu chiếm 2 cột</h2>
+    <div class="grid-span">
+        <div class="o o-lon">1 (span 2)</div>
+        <div class="o">2</div>
+        <div class="o">3</div>
+        <div class="o">4</div>
+        <div class="o">5</div>
+        <div class="o">6</div>
+    </div>
+
+</body>
+</html>
