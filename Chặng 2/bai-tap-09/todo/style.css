@@ -1,0 +1,313 @@
+:root {
+  --color-bg: #eef0fb;
+  --color-surface: #ffffff;
+  --color-border: #e3e5f2;
+  --color-text: #21243a;
+  --color-text-muted: #767c96;
+  --color-accent: #5b5bf5;
+  --color-accent-soft: #eceafe;
+  --color-danger: #e0526b;
+  --color-danger-soft: #fbe6ea;
+  --color-success: #2fae76;
+  --radius-md: 10px;
+  --radius-lg: 18px;
+  --shadow-card: 0 24px 50px -28px rgba(33, 36, 58, 0.4);
+  --font-sans: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 48px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: radial-gradient(circle at top, #f7f8fd 0%, var(--color-bg) 60%);
+  font-family: var(--font-sans);
+  color: var(--color-text);
+}
+
+.todo-app {
+  width: 100%;
+  max-width: 460px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 32px 28px 24px;
+}
+
+.todo-app__title {
+  margin: 0 0 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Form thêm việc */
+
+.todo-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.todo-form__input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background: #fbfbfe;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.todo-form__input:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.todo-form__submit {
+  width: 44px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.todo-form__submit:hover {
+  background: #4a4ae0;
+}
+
+.todo-form__submit:active {
+  transform: scale(0.94);
+}
+
+/* Toolbar: bộ lọc + đánh dấu tất cả */
+
+.todo-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.todo-filters {
+  display: inline-flex;
+  padding: 4px;
+  gap: 2px;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+}
+
+.todo-filters__btn {
+  border: none;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.todo-filters__btn:hover {
+  color: var(--color-text);
+}
+
+.todo-filters__btn.is-active {
+  background: var(--color-surface);
+  color: var(--color-accent);
+  font-weight: 600;
+  box-shadow: 0 4px 10px -6px rgba(33, 36, 58, 0.35);
+}
+
+.todo-toolbar__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.todo-toolbar__all input {
+  accent-color: var(--color-accent);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+/* Danh sách việc */
+
+.todo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 12px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px;
+  border-radius: var(--radius-md);
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.todo-item:hover {
+  background: #f8f8fd;
+}
+
+.todo-item.is-dragging {
+  opacity: 0.4;
+}
+
+.todo-item.is-drag-over {
+  box-shadow: inset 0 2px 0 var(--color-accent);
+}
+
+.todo-item__checkbox {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--color-success);
+  cursor: pointer;
+}
+
+.todo-item__noi-dung {
+  flex: 1;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.todo-item.is-xong .todo-item__noi-dung {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.todo-item__input-sua {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid var(--color-accent);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.todo-item__btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.todo-item:hover .todo-item__btn,
+.todo-item__btn:focus-visible {
+  opacity: 1;
+}
+
+.todo-item__btn--sua:hover {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.todo-item__btn--xoa:hover {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+/* Trạng thái rỗng */
+
+.todo-empty {
+  text-align: center;
+  padding: 28px 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* Footer */
+
+.todo-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.todo-footer__clear {
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 0.82rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.todo-footer__clear:hover {
+  color: var(--color-danger);
+}
+
+/* Toast hoàn tác */
+
+.undo-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  background: #21243a;
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  box-shadow: var(--shadow-card);
+}
+
+.undo-toast__btn {
+  border: none;
+  background: transparent;
+  color: #a9b1ff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.undo-toast__btn:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 420px) {
+  .todo-app {
+    padding: 24px 18px 18px;
+  }
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài tập 09 - Form</title>
+</head>
+<body>
+  <form id="form">
+    <input name="ten" placeholder="Họ tên" required>
+    <input name="email" type="email" placeholder="Email" required>
+    <input name="tuoi" placeholder="Tuổi (chỉ số)">
+    <select name="thanhPho">
+      <option value="">-- Chọn --</option>
+      <option value="hcm">HCM</option>
+      <option value="hn">Hà Nội</option>
+    </select>
+    <label><input type="checkbox" name="dongY"> Đồng ý điều khoản</label>
+    <button type="submit">Gửi</button>
+  </form>
+  <pre id="ket-qua"></pre>
+
+  <script src="main.js"></script>
+</body>
+</html>
