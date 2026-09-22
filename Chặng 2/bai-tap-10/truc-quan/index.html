@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài tập 10 — Trực quan hóa Event Loop</title>
+</head>
+<body style="font-family: monospace">
+  <div style="display:flex; gap:24px">
+    <div>
+      <h3>Call Stack</h3>
+      <ul id="cot-stack" style="border:1px solid #333; min-height:120px; width:160px"></ul>
+    </div>
+    <div>
+      <h3>Microtask Queue</h3>
+      <ul id="cot-micro" style="border:1px solid #333; min-height:120px; width:160px"></ul>
+    </div>
+    <div>
+      <h3>Task Queue</h3>
+      <ul id="cot-task" style="border:1px solid #333; min-height:120px; width:160px"></ul>
+    </div>
+  </div>
+
+  <hr>
+
+  <button id="chay-vd1">Chạy ví dụ 1 (A, setTimeout B, Promise C, D)</button>
+  <button id="chay-vd2">Chạy ví dụ 2 (microtask sinh thêm microtask)</button>
+
+  <pre id="console-gia">--- console giả lập ---</pre>
+
+  <script src="main.js"></script>
+</body>
+</html>
