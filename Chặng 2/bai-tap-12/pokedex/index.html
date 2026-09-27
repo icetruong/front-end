@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokédex</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="dau-trang">
+        <h1>Pokédex</h1>
+        <div class="thanh-cong-cu">
+            <input id="o-tim" type="search" placeholder="🔍 Tìm Pokémon..." autocomplete="off">
+            <select id="loc-loai">
+                <option value="">Tất cả loại</option>
+                <!-- JS thêm các <option> lấy từ /type -->
+            </select>
+        </div>
+        <!-- Nâng cao 17: tab Yêu thích (bỏ nếu không làm) -->
+        <nav class="cac-tab">
+            <button class="tab dang-chon" data-tab="tat-ca">Tất cả</button>
+            <button class="tab" data-tab="yeu-thich">Yêu thích ★</button>
+        </nav>
+    </header>
+
+    <main class="noi-dung">
+        <!-- Trạng thái lỗi -->
+        <div id="khung-loi" class="thong-bao thong-bao-loi" hidden>
+            <p class="thong-bao-icon">⚠️</p>
+            <p id="loi-noi-dung">Có lỗi xảy ra.</p>
+            <button id="thu-lai" class="nut">Thử lại</button>
+        </div>
+
+        <!-- Trạng thái rỗng -->
+        <div id="khung-rong" class="thong-bao" hidden>
+            <p class="thong-bao-icon">🔎</p>
+            <p id="rong-noi-dung">Không tìm thấy Pokémon nào khớp...</p>
+        </div>
+
+        <!-- Danh sách: MỘT listener gắn ở đây (event delegation) -->
+        <ul id="ds-pokemon" class="luoi"></ul>
+    </main>
+
+    <footer class="chan-trang">
+        <button id="tai-them" class="nut">Tải thêm</button>
+        <span id="dem">Đã tải 0/0</span>
+        <!-- Nâng cao 15: phần tử để IntersectionObserver theo dõi (bỏ nếu không làm) -->
+        <div id="moc-cuoi"></div>
+    </footer>
+
+    <!-- Modal chi tiết -->
+    <div id="modal" class="modal" hidden>
+        <div class="modal-hop" role="dialog" aria-modal="true" aria-labelledby="ct-ten">
+            <button id="dong-modal" class="nut-dong" aria-label="Đóng">×</button>
+
+            <!-- Đang tải chi tiết -->
+            <div id="ct-dang-tai" class="spinner" hidden></div>
+
+            <!-- Lỗi chi tiết -->
+            <p id="ct-loi" class="ct-loi" hidden></p>
+
+            <div id="ct-noi-dung">
+                <div class="ct-dau">
+                    <img id="ct-anh" class="ct-anh" alt="">
+                    <div>
+                        <span id="ct-so" class="so"></span>
+                        <h2 id="ct-ten" class="ten"></h2>
+                        <div id="ct-loai" class="ds-loai"></div>
+                    </div>
+                </div>
+
+                <dl class="ct-kich-thuoc">
+                    <div><dt>Chiều cao</dt><dd id="ct-chieu-cao"></dd></div>
+                    <div><dt>Cân nặng</dt><dd id="ct-can-nang"></dd></div>
+                </dl>
+
+                <h3>Chỉ số</h3>
+                <ul id="ct-chi-so" class="ds-chi-so"></ul>
+
+                <h3>Chiêu thức</h3>
+                <ol id="ct-chieu" class="ds-chieu"></ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Template: clone bằng JS, gán textContent — KHÔNG innerHTML ===== -->
+
+    <!-- Thẻ Pokémon -->
+    <template id="tpl-the">
+        <li class="the" data-id="">
+            <button class="nut-yeu-thich" aria-label="Yêu thích">☆</button>
+            <span class="so"></span>
+            <img class="anh" alt="" loading="lazy">
+            <h3 class="ten"></h3>
+            <div class="ds-loai"></div>
+        </li>
+    </template>
+
+    <!-- Thẻ skeleton khi đang tải -->
+    <template id="tpl-skeleton">
+        <li class="the skeleton" aria-hidden="true">
+            <span class="sk sk-so"></span>
+            <span class="sk sk-anh"></span>
+            <span class="sk sk-ten"></span>
+            <span class="sk sk-loai"></span>
+        </li>
+    </template>
+
+    <!-- Nhãn loại: thêm class "loai-<tên>" (vd: loai-fire) để có màu -->
+    <template id="tpl-loai">
+        <span class="loai"></span>
+    </template>
+
+    <!-- Một dòng chỉ số: set style.width của .thanh-gia-tri theo % -->
+    <template id="tpl-chi-so">
+        <li class="chi-so">
+            <span class="chi-so-ten"></span>
+            <span class="chi-so-so"></span>
+            <span class="thanh"><span class="thanh-gia-tri"></span></span>
+        </li>
+    </template>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

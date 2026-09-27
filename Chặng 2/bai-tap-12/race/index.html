@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài tập 12 - Race condition</title>
+</head>
+<body>
+    <h1>Chứng minh race condition</h1>
+    <p>Gõ thật nhanh một chuỗi dài rồi quan sát hai dòng bên dưới.</p>
+
+    <input id="o-tim" placeholder="Gõ nhanh...">
+    <p>Từ khóa hiện tại: <b id="tu-khoa"></b></p>
+    <p>Kết quả đang hiển thị cho: <b id="ket-qua-cho"></b></p>
+    <ul id="ds"></ul>
+
+    <hr>
+    <p>Số request đã gửi: <b id="so-request">0</b></p>
+    <p>Số lần hiển thị sai: <b id="so-lan-sai">0</b></p>
+    <button id="dat-lai">Đặt lại bộ đếm</button>
+
+  <script src="main.js"></script>
+</body>
+</html>

@@ -22,7 +22,7 @@ Mỗi file học khoảng **2–4 giờ** (đọc + làm bài tập). Với 10�
 
 ---
 
-## Chặng 2 — JavaScript (14 file · ~6 tuần)
+## Chặng 2 — JavaScript (14 file · ~3 tuần)
 
 Bạn đã học JS sơ qua trước đây, nên vài file đầu sẽ đi nhanh. Nhưng mình vẫn viết đầy đủ, vì "học sơ sơ" thường có nghĩa là viết được nhưng không giải thích được — mà phỏng vấn hỏi đúng phần giải thích.
 
@@ -49,7 +49,7 @@ Bạn đã học JS sơ qua trước đây, nên vài file đầu sẽ đi nhanh
 
 ---
 
-## Chặng 3 — Git, Tooling & TypeScript (8 file · ~3 tuần)
+## Chặng 3 — Git, Tooling & TypeScript (8 file · ~1 tuần)
 
 | File | Nội dung | Bài tập cuối file |
 |---|---|---|
@@ -66,7 +66,7 @@ Bạn đã học JS sơ qua trước đây, nên vài file đầu sẽ đi nhanh
 
 ---
 
-## Chặng 4 — React nền tảng (12 file · ~5 tuần)
+## Chặng 4 — React nền tảng (12 file · ~3 tuần)
 
 | File | Nội dung | Bài tập cuối file |
 |---|---|---|
@@ -87,7 +87,7 @@ Bạn đã học JS sơ qua trước đây, nên vài file đầu sẽ đi nhanh
 
 ---
 
-## Chặng 5 — Hệ sinh thái React (7 file · ~4 tuần)
+## Chặng 5 — Hệ sinh thái React (7 file · ~1 tuần)
 
 | File | Nội dung | Bài tập cuối file |
 |---|---|---|
@@ -103,7 +103,7 @@ TanStack Query là thứ phân biệt người học theo tutorial và người 
 
 ---
 
-## Chặng 6 — Chất lượng giao diện & nền tảng web (7 file · ~3 tuần)
+## Chặng 6 — Chất lượng giao diện & nền tảng web (7 file · ~1 tuần)
 
 Chặng 1 bạn đã chắc Flexbox/Grid/Responsive nên phần CSS ở đây nhẹ. Trọng tâm là những thứ ứng viên hay bỏ qua — cũng là thứ khiến portfolio trông chuyên nghiệp hay nghiệp dư.
 
@@ -121,7 +121,7 @@ CORS gần như chắc chắn bị hỏi trong phỏng vấn.
 
 ---
 
-## Chặng 7 — Testing, Next.js & phỏng vấn (9 file · ~5 tuần)
+## Chặng 7 — Testing, Next.js & phỏng vấn (9 file · ~2 tuần)
 
 | File | Nội dung | Bài tập cuối file |
 |---|---|---|
