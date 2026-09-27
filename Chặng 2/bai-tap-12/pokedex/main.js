@@ -24,7 +24,7 @@ let state = {
     },
 
     // --- Nâng cao 17 (bỏ nếu không làm) ---
-    dsYeuThich: [],      // mảng id
+    dsYeuThich: [],      // mảng tên (khớp với dataset.id đang dùng tên làm khóa)
     tabDangChon: "tat-ca",
 };
 
@@ -104,6 +104,11 @@ function renderDanhSach(dsPokemon)
         li.dataset.id = pokemon.name;
         li.querySelector(".so").textContent = `#${String(pokemon.id).padStart(3, "0")}`;
         li.querySelector(".ten").textContent = pokemon.name;
+
+        const nutYeuThich = li.querySelector(".nut-yeu-thich");
+        const daThich = state.dsYeuThich.includes(pokemon.name);
+        nutYeuThich.textContent = daThich ? "★" : "☆";
+        nutYeuThich.classList.toggle("da-thich", daThich);
 
         const anh = li.querySelector(".anh");
         anh.src = pokemon.sprites.front_default ?? "";
@@ -237,12 +242,25 @@ function renderChiTietModal(pokemon)
     });
 }
 
+function renderTab()
+{
+    document.querySelectorAll(".tab").forEach(tabEl => {
+        tabEl.classList.toggle("dang-chon", tabEl.dataset.tab === state.tabDangChon);
+    });
+}
+
 function render()
 {
-    renderDanhSach(state.dsPokemon);
+    const dsHienThi = state.tabDangChon === "yeu-thich"
+                    ? state.dsPokemon.filter(t => state.dsYeuThich.includes(t.name))
+                    : state.dsPokemon;
+
+
+    renderDanhSach(dsHienThi);
     renderTrangThai();
     renderDem();
     renderModal();
+    renderTab();
 }
 
 
@@ -297,9 +315,18 @@ const taiThemEl = document.querySelector("#tai-them");
 
 taiThemEl.addEventListener("click", taiThemPokemon);
 
+const mocCuoiEl = document.querySelector("#moc-cuoi");
+
+const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting)
+        taiThemPokemon();
+});
+
+observer.observe(mocCuoiEl);
+
 async function taiThemPokemon()
 {
-    if(state.dangTai)
+    if(state.dangTai || state.tuKhoa !== "" || state.dsPokemon.length >= state.tongSo)
         return;
 
     capNhat({dangTai: true, loi: null});
@@ -329,6 +356,15 @@ async function taiThemPokemon()
 }
 
 document.querySelector("#ds-pokemon").addEventListener("click", (e) => {
+    const yeuThichEl = e.target.closest(".nut-yeu-thich");
+
+    if(yeuThichEl)
+    {
+        const ten = e.target.closest(".the").dataset.id;
+        toggleYeuThich(ten);
+        return;
+    }
+
     const el = e.target.closest(".the");
     if(!el || el.classList.contains("skeleton"))
         return;
@@ -507,3 +543,19 @@ document.querySelector("#loc-loai").addEventListener("change", (e) => {
     xuLyDoiLoc(value);
 });
 
+function toggleYeuThich(ten)
+{
+    const daThich = state.dsYeuThich.includes(ten);
+
+    capNhat({
+        dsYeuThich: daThich ? state.dsYeuThich.filter(t => t !== ten) : [...state.dsYeuThich, ten]
+    });
+}
+
+document.querySelector(".cac-tab").addEventListener("click", (e) => {
+    const el = e.target.closest(".tab");
+    if(!el)
+        return;
+
+    capNhat({tabDangChon: el.dataset.tab});
+});
