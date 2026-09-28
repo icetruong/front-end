@@ -1,7 +1,52 @@
-const todoList = [];
+const kho = {
+    doc(khoa, macDinh = null)
+    {
+        try
+        {
+            const giaTri = localStorage.getItem(khoa);
+            if(giaTri === null)
+                return macDinh;
+
+            return JSON.parse(giaTri);
+        }
+        catch (e)
+        {
+            console.warn(`Dữ liệu hỏng ở khóa "${khoa}", dùng giá trị mặc định`, e);
+            localStorage.removeItem(khoa);
+            return macDinh;
+        }
+    },
+    ghi(khoa, giaTri)
+    {
+        try
+        {
+            localStorage.setItem(khoa, JSON.stringify(giaTri));
+            return true;
+        }
+        catch (e)
+        {
+            if (e.name === "QuotaExceededError") {
+                console.error("Hết dung lượng lưu trữ");
+            }
+            return false;
+        }
+    },
+    xoa(khoa)
+    {
+        localStorage.removeItem(khoa);
+    },
+    co(khoa)
+    {
+        return localStorage.getItem(khoa) !== null;
+    }
+}
+
+let todoList = kho.doc("todoList", []);
 let idKeTiep = 0;              // bộ đếm id tăng dần, không tái sử dụng khi xóa
-let boLocHienTai = "tat-ca";   // trạng thái: bộ lọc đang chọn
+let boLocHienTai = kho.doc("boLoc", "tat-ca");   // trạng thái: bộ lọc đang chọn
 let dangSuaId = null;          // id việc đang được sửa tại chỗ, null = không có
+
+
 
 function layDanhSachHienThi()
 {
@@ -78,6 +123,7 @@ function ve(todos)
 
 function render()
 {
+    kho.ghi("todoList", todoList);
     const danhSachHienThi = layDanhSachHienThi();
     ve(danhSachHienThi);
 
@@ -164,6 +210,7 @@ function huySua()
 function boLoc(filter)
 {
     boLocHienTai = filter;
+    kho.ghi("boLoc", filter);
     render();
 }
 
@@ -264,6 +311,19 @@ document.querySelector("#nut-xoa-xong").addEventListener("click", () => {
 
 document.querySelector("#checkbox-tat-ca").addEventListener("change", (e) => {
     danhDauTatCa(e.target.checked);
+});
+
+window.addEventListener("storage", (e) => {
+    if(e.key === "todoList")
+    {
+        todoList = JSON.parse(e.newValue ?? "[]");
+        render();
+    }
+    if(e.key === "boLoc")
+    {
+        boLocHienTai = JSON.parse(e.newValue ?? "\"tat-ca\"");
+        render();
+    }
 });
 
 render();
