@@ -100,6 +100,39 @@ package-lock.json
 }
 ```
 
+## Bước 5b — (Tùy chọn) Alias `@` → `src/`
+
+Cần khai báo ở **2 nơi**: Vite hiểu để chạy, TypeScript hiểu để kiểm tra kiểu.
+
+```bash
+npm install -D @types/node
+```
+
+### `vite.config.ts` (tự tạo — template Vanilla không có sẵn)
+
+```ts
+import { defineConfig } from "vite";
+import { fileURLToPath, URL } from "node:url";
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+});
+```
+
+### `tsconfig.json` — thêm vào `compilerOptions`
+
+```json
+"paths": {
+  "@/*": ["./src/*"]
+}
+```
+
+Dùng: `import { setupCounter } from "@/counter.ts";`
+
 ## Bước 6 — Chạy thử
 
 ```bash
@@ -123,6 +156,9 @@ Cả ba đều không báo lỗi là xong.
 | Đặt tên `eslint.config.js`, không đặt `.ts` | File `.ts` bắt cài thêm `jiti`, nếu không ESLint báo lỗi |
 | Vite **không** kiểm tra kiểu | Phải xem gạch đỏ trong editor hoặc chạy `npm run typecheck` |
 | `strict` | TS 6.0 bật mặc định, nhưng nên ghi rõ `"strict": true` trong `tsconfig.json` |
+| Alias khai báo ở `vite.config.ts` **và** `tsconfig.json` | Thiếu `paths` thì Vite chạy được nhưng `tsc`/editor báo `Cannot find module '@/...'` |
+| Alias đặt trong `vite.config.ts`, **không** đặt trong `eslint.config.js` | `resolve.alias` là tùy chọn của Vite; ESLint không biết và còn báo lỗi cú pháp nếu nhét `key: value` vào mảng config |
+| Không dùng `__dirname` trong `vite.config.ts` | Project là ESM (`"type": "module"`), không có `__dirname` — dùng `new URL(..., import.meta.url)` |
 
 ---
 
