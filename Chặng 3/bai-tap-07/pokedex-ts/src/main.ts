@@ -4,6 +4,8 @@ import { api } from "./api.js";
 import { capNhat, taiTrang, taiThemPokemon, phanLoaiLoi, xuLyDoiLoc, timVaHienThi } from "./pokemon.js";
 import { state } from "./trang-thai.js";
 import "./su-kien.js";
+import { layEl } from "./untils/dom.js";
+import { laDanhSachLoai } from "./pokeapi.js";
 
 
 // ① TRẠNG THÁI — một object duy nhất, mọi thứ trên màn hình đều suy ra từ đây
@@ -30,17 +32,19 @@ import "./su-kien.js";
 // ⑤ SỰ KIỆN + KHỞI ĐỘNG
 async function khoiDong()
 {
-    capNhat({dangTai: true, loi: null});
+    capNhat({dsPokemon: {loai: "dang-tai-lan-dau"}});
 
     try
     {
-        const duLieuLoai = await api.get("/type");
-        const dsLoai = duLieuLoai.results.map(item => item.name)
+        const duLieuLoai = await api.get("/type", laDanhSachLoai);
+        if(!duLieuLoai.ok)
+            throw duLieuLoai.loi;
+        const dsLoai = duLieuLoai.giaTri.results.map(item => item.name)
                                         .filter(name => !["unknown", "shadow", "stellar"].includes(name));
 
         capNhat({ dsLoai });
 
-        const locLoaiEl = document.querySelector("#loc-loai");
+        const locLoaiEl = layEl("#loc-loai", HTMLSelectElement);
         dsLoai.forEach(name => {
             const option = document.createElement("option");
             option.value = name;
@@ -49,37 +53,38 @@ async function khoiDong()
         });
 
         // Khôi phục bộ lọc/tìm kiếm cuối cùng đã lưu (yêu cầu 9)
-        if (state.loaiDangChon !== "")
+        if (state.boLoc.loaiDangChon !== "")
         {
-            locLoaiEl.value = state.loaiDangChon;
-            await xuLyDoiLoc(state.loaiDangChon);
+            locLoaiEl.value = state.boLoc.loaiDangChon;
+            await xuLyDoiLoc(state.boLoc.loaiDangChon);
             return;
         }
 
-        if (state.tuKhoa !== "")
+        if (state.boLoc.tuKhoa !== "")
         {
-            document.querySelector("#o-tim").value = state.tuKhoa;
-            await timVaHienThi(state.tuKhoa);
+            layEl("#o-tim", HTMLInputElement).value = state.boLoc.tuKhoa;
+            await timVaHienThi(state.boLoc.tuKhoa);
             return;
         }
 
         const ketQuaTrang = await taiTrang(0);
         capNhat({
-            dangTai: false,
-            dsPokemon: ketQuaTrang.ketQua,
-            tongSo: ketQuaTrang.tongSo,
-            offset: 20
+            dsPokemon: {loai: "thanh-cong", dsPokemon: ketQuaTrang.ketQua},
+            phanTrang : {
+                tongSo: ketQuaTrang.tongSo,
+                offset: 20
+            }
         });
     }
     catch (e)
     {
-        capNhat({dangTai: false, loi: phanLoaiLoi(e)})
+        capNhat({ dsPokemon: {loai: "loi", thongBao: phanLoaiLoi(e).thongDiep} });
     }
 }
 
 khoiDong();
 
-const mocCuoiEl = document.querySelector("#moc-cuoi");
+const mocCuoiEl = layEl("#moc-cuoi", HTMLElement);
 
 const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting)

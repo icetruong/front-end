@@ -3,7 +3,11 @@ export interface DanhSachPokemon {
     next: string | null;
     previous: string | null;
     results: { name: string; url: string }[];
-} 
+}
+
+// /type (không kèm tên loại) trả về đúng cấu trúc phân trang như /pokemon:
+// { count, next, previous, results: [{ name, url }] } → dùng lại, chỉ đặt tên riêng cho dễ đọc
+export type DanhSachLoai = DanhSachPokemon;
 
 export interface Pokemon {
     id: number;
@@ -15,6 +19,17 @@ export interface Pokemon {
     stats: { base_stat: number; stat: { name: string } }[];
     moves: { move: { name: string } }[];
 }
+
+// Phản hồi của /type/{loai}: API trả nhiều field (damage_relations, moves...)
+// nhưng mình chỉ khai báo phần thật sự dùng — danh sách pokemon thuộc loại đó
+export interface PokemonTheoLoai {
+    pokemon: { slot: number; pokemon: { name: string; url: string } }[];
+}
+
+export interface CachePokemon {
+    luuLuc: number,
+    duLieu: Pokemon
+};
 
 // typeof null === "object" và mảng cũng là "object", nên phải loại cả hai
 function laObject(x: unknown): x is Record<string, unknown> {
@@ -52,6 +67,12 @@ function laMove(x: unknown): x is { move: { name: string } } {
     return laObject(x) && laObject(x.move) && typeof x.move.name === "string";
 }
 
+// Phần tử trong mảng pokemon của /type: bên trong lại có một object pokemon dạng { name, url }
+// → tái dùng laKetQuaDanhSach thay vì viết lại
+function laPhanTuTheoLoai(x: unknown): x is { slot: number; pokemon: { name: string; url: string } } {
+    return laObject(x) && typeof x.slot === "number" && laKetQuaDanhSach(x.pokemon);
+}
+
 // Array.isArray(x.results) chỉ biết đó là mảng, chưa biết bên trong có gì.
 // .every(laKetQuaDanhSach) mới là bước thật sự kiểm tra từng phần tử.
 export function laDanhSachPokemon(x: unknown): x is DanhSachPokemon {
@@ -63,6 +84,11 @@ export function laDanhSachPokemon(x: unknown): x is DanhSachPokemon {
         Array.isArray(x.results) &&
         x.results.every(laKetQuaDanhSach)
     );
+}
+
+// Cùng cấu trúc với DanhSachPokemon nên kiểm tra y hệt — gọi lại guard cũ
+export function laDanhSachLoai(x: unknown): x is DanhSachLoai {
+    return laDanhSachPokemon(x);
 }
 
 export function laPokemon(x: unknown): x is Pokemon {
@@ -80,6 +106,22 @@ export function laPokemon(x: unknown): x is Pokemon {
         x.stats.every(laStat) &&
         Array.isArray(x.moves) &&
         x.moves.every(laMove)
+    );
+}
+
+export function laPokemonTheoLoai(x: unknown): x is PokemonTheoLoai {
+    return (
+        laObject(x) &&
+        Array.isArray(x.pokemon) &&
+        x.pokemon.every(laPhanTuTheoLoai)
+    );
+}
+
+export function laCachePokemon(x: unknown) : x is CachePokemon {
+    return (
+        laObject(x) &&
+        typeof x.luuLuc === "number" &&
+        laPokemon(x.duLieu)
     );
 }
 

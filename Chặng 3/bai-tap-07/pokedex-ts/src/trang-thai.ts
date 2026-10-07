@@ -13,6 +13,25 @@ export type TrangThaiDanhSach =
     | { loai: "loi"; thongBao: string }
     | { loai: "thanh-cong"; dsPokemon: Pokemon[] };
 
+export function layDanhSachHienTai() : Pokemon[]
+{
+    switch (state.dsPokemon.loai)
+    {
+        case "dang-tai-lan-dau":
+            return [];
+        case "dang-tai-them":
+            return state.dsPokemon.dsPokemon;
+        case "loi":
+            return [];
+        case "thanh-cong":
+            return state.dsPokemon.dsPokemon;
+        default : {
+            const duLieu : never = state.dsPokemon;
+            return duLieu;
+        }
+    }
+}
+
 export type Tab = "tat-ca" | "yeu-thich";
 
 export type BoLoc = {
@@ -57,6 +76,11 @@ function laObject(x: unknown): x is Record<string, unknown> {
 
 function laBoLoc(x: unknown): x is BoLoc {
     return laObject(x) && typeof x.tuKhoa === "string" && typeof x.loaiDangChon === "string";
+}
+
+// dataset.tab là string | undefined → phải kiểm tra trước khi gán vào tabDangChon (thay cho "as Tab")
+export function laTab(x: unknown): x is Tab {
+    return x === "tat-ca" || x === "yeu-thich";
 }
 
 export let state: TrangThai = {

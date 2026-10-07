@@ -1,4 +1,4 @@
-const baseURL = "https://pokeapi.co/api/v2/";
+const baseURL = "https://pokeapi.co/api/v2";
 const timeAboutDefault = 10000;
 
 type ketQua<T, E = Error> = 
@@ -18,12 +18,12 @@ type Options = {
 type OptionsUrl = {
     method: string,
     body: Record<string, unknown> | FormData,
-    params: Record<string, string>, 
+    params: Record<string, string| number>, 
     signal: AbortSignal, 
     thoiHan: number
 }
 
-class LoiHTTP extends Error {
+export class LoiHTTP extends Error {
   // Khai báo thuộc tính ở đây
     public status: number;
 
@@ -133,7 +133,7 @@ async function Goi<T>(duongDan: string, kiemTra: KiemTra<T>, {method = "GET", bo
         const url = new URL(baseURL + duongDan);
 
         if(params)
-            url.search = new URLSearchParams(params).toString();
+            url.search = new URLSearchParams(Object.entries(params).map(([key, value]) => [key, String(value)])).toString();
 
         // signal KHÔNG gắn vào đây — mỗi lần thử sẽ tự tạo signal riêng (xem thuLai bên dưới)
         // Partial làm mọi field thành tùy chọn → "& { headers: ... }" ghi đè lại riêng headers thành BẮT BUỘC

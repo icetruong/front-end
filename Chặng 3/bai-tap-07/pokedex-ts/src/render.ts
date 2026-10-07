@@ -1,173 +1,219 @@
-import { state } from "./trang-thai.js";
+import { state, type TrangThaiDanhSach } from "./trang-thai.js";
+import { type Pokemon } from "./pokeapi.js";
+import { layEl, nhanBan } from "./untils/index.ts";
 
-function renderDanhSach(dsPokemon)
+const SO_THE_SKELETON = 20;
+const CHI_SO_TOI_DA = 255;   // base_stat cao nhất trong game, dùng để tính % thanh chỉ số
+const SO_CHIEU_HIEN_THI = 5;
+
+// Gặp nhánh này nghĩa là union có thêm trạng thái mới mà switch chưa xử lý → TS báo đỏ ngay
+function chuaXuLy(x: never): never
 {
-    const dsPokemonEl = document.querySelector("#ds-pokemon");
-    const tplThe = document.querySelector("#tpl-the");
-    const tplLoai = document.querySelector("#tpl-loai");
-
-    dsPokemonEl.innerHTML = "";
-
-    dsPokemon.forEach(pokemon => {
-        const li = tplThe.content.firstElementChild.cloneNode(true);
-
-        li.dataset.id = pokemon.name;
-        li.querySelector(".so").textContent = `#${String(pokemon.id).padStart(3, "0")}`;
-        li.querySelector(".ten").textContent = pokemon.name;
-
-        const nutYeuThich = li.querySelector(".nut-yeu-thich");
-        const daThich = state.dsYeuThich.includes(pokemon.name);
-        nutYeuThich.textContent = daThich ? "★" : "☆";
-        nutYeuThich.classList.toggle("da-thich", daThich);
-
-        const anh = li.querySelector(".anh");
-        anh.src = pokemon.sprites.front_default ?? "";
-        anh.alt = pokemon.name;
-
-        const dsLoaiEl = li.querySelector(".ds-loai");
-        pokemon.types.forEach(({ type }) => {
-            const loaiEl = tplLoai.content.firstElementChild.cloneNode(true);
-            loaiEl.textContent = type.name;
-            loaiEl.classList.add(`loai-${type.name}`);
-            dsLoaiEl.append(loaiEl);
-        });
-
-        dsPokemonEl.append(li);
-    });
+    throw new Error(`Trạng thái chưa được xử lý: ${JSON.stringify(x)}`);
 }
 
-function renderDem()
+// Lấy mảng Pokémon từ union: chỉ 2 trạng thái có dsPokemon, còn lại coi như rỗng
+function layDsPokemon(ds: TrangThaiDanhSach): Pokemon[]
 {
-    const demEl = document.querySelector("#dem");
-    const taiThemEl = document.querySelector("#tai-them");
-
-    demEl.textContent = `Đã tải ${state.dsPokemon.length}/${state.tongSo}`;
-
-    taiThemEl.disabled = state.dsPokemon.length >= state.tongSo || state.tuKhoa !== "" || state.dangTai;
-}
-
-function renderTrangThai()
-{
-    const khungLoiEl = document.querySelector("#khung-loi");
-    const loiNoiDungEl = document.querySelector("#loi-noi-dung");
-    const khungRongEl = document.querySelector("#khung-rong");
-    const rongNoiDungEl = document.querySelector("#rong-noi-dung");
-    const dsPokemonEl = document.querySelector("#ds-pokemon");
-    const tplSkeleton = document.querySelector("#tpl-skeleton");
-
-    const rong = !state.dangTai && !state.loi && state.dsPokemon.length === 0;
-    const dangTaiLanDau = state.dangTai && state.dsPokemon.length === 0;
-
-    khungLoiEl.hidden = !state.loi;
-    if (state.loi)
+    switch (ds.loai)
     {
-        loiNoiDungEl.textContent = state.loi.thongDiep;
+        case "dang-tai-them":
+        case "thanh-cong":
+            return ds.dsPokemon;
+        case "dang-tai-lan-dau":
+        case "loi":
+            return [];
+        default:
+            return chuaXuLy(ds);
     }
+}
+
+function dangTai(ds: TrangThaiDanhSach): boolean
+{
+    return ds.loai === "dang-tai-lan-dau" || ds.loai === "dang-tai-them";
+}
+
+function dinhDangSo(id: number): string
+{
+    return `#${String(id).padStart(3, "0")}`;
+}
+
+// Dùng chung cho thẻ ngoài lưới và modal chi tiết
+function renderLoai(pokemon: Pokemon, khungEl: HTMLElement): void
+{
+    const tplLoai = layEl("#tpl-loai", HTMLTemplateElement);
+
+    khungEl.replaceChildren(...pokemon.types.map(({ type }) => {
+        const loaiEl = nhanBan(tplLoai);
+        loaiEl.textContent = type.name;
+        loaiEl.classList.add(`loai-${type.name}`);
+        return loaiEl;
+    }));
+}
+
+function taoThe(pokemon: Pokemon, tplThe: HTMLTemplateElement): HTMLElement
+{
+    const li = nhanBan(tplThe);
+
+    li.dataset.id = pokemon.name;
+    layEl(".so", HTMLElement, li).textContent = dinhDangSo(pokemon.id);
+    layEl(".ten", HTMLElement, li).textContent = pokemon.name;
+
+    const nutYeuThich = layEl(".nut-yeu-thich", HTMLButtonElement, li);
+    const daThich = state.dsYeuThich.includes(pokemon.name);
+    nutYeuThich.textContent = daThich ? "★" : "☆";
+    nutYeuThich.classList.toggle("da-thich", daThich);
+
+    const anh = layEl(".anh", HTMLImageElement, li);
+    anh.src = pokemon.sprites.front_default ?? "";
+    anh.alt = pokemon.name;
+
+    renderLoai(pokemon, layEl(".ds-loai", HTMLElement, li));
+
+    return li;
+}
+
+function renderDanhSach(dsPokemon: Pokemon[]): void
+{
+    const dsPokemonEl = layEl("#ds-pokemon", HTMLUListElement);
+    const tplThe = layEl("#tpl-the", HTMLTemplateElement);
+
+    dsPokemonEl.replaceChildren(...dsPokemon.map(pokemon => taoThe(pokemon, tplThe)));
+}
+
+function renderDem(): void
+{
+    const demEl = layEl("#dem", HTMLElement);
+    const taiThemEl = layEl("#tai-them", HTMLButtonElement);
+
+    const soDaTai = layDsPokemon(state.dsPokemon).length;
+    const { tongSo } = state.phanTrang;
+
+    demEl.textContent = `Đã tải ${soDaTai}/${tongSo}`;
+    taiThemEl.disabled = soDaTai >= tongSo || state.boLoc.tuKhoa !== "" || dangTai(state.dsPokemon);
+}
+
+function renderTrangThai(): void
+{
+    const khungLoiEl = layEl("#khung-loi", HTMLElement);
+    const loiNoiDungEl = layEl("#loi-noi-dung", HTMLElement);
+    const khungRongEl = layEl("#khung-rong", HTMLElement);
+    const rongNoiDungEl = layEl("#rong-noi-dung", HTMLElement);
+    const dsPokemonEl = layEl("#ds-pokemon", HTMLUListElement);
+    const tplSkeleton = layEl("#tpl-skeleton", HTMLTemplateElement);
+
+    const ds = state.dsPokemon;
+    const rong = ds.loai === "thanh-cong" && ds.dsPokemon.length === 0;
+
+    khungLoiEl.hidden = ds.loai !== "loi";
+    if (ds.loai === "loi")
+        loiNoiDungEl.textContent = ds.thongBao;
 
     khungRongEl.hidden = !rong;
     if (rong)
     {
-        rongNoiDungEl.textContent = state.tuKhoa !== ""
-            ? `Không tìm thấy Pokémon nào khớp "${state.tuKhoa}".`
+        const { tuKhoa } = state.boLoc;
+        rongNoiDungEl.textContent = tuKhoa !== ""
+            ? `Không tìm thấy Pokémon nào khớp "${tuKhoa}".`
             : "Không tìm thấy Pokémon nào khớp bộ lọc hiện tại.";
     }
 
-    if (dangTaiLanDau)
+    if (ds.loai === "dang-tai-lan-dau")
     {
-        for (let i = 0; i < 20; i++)
-        {
-            const li = tplSkeleton.content.firstElementChild.cloneNode(true);
-            dsPokemonEl.append(li);
-        }
+        for (let i = 0; i < SO_THE_SKELETON; i++)
+            dsPokemonEl.append(nhanBan(tplSkeleton));
     }
 }
 
-function renderModal()
+function renderModal(): void
 {
-    const modalEl = document.querySelector("#modal");
-    const ctDangTaiEl = document.querySelector("#ct-dang-tai");
-    const ctLoiEl = document.querySelector("#ct-loi");
-    const ctNoiDungEl = document.querySelector("#ct-noi-dung");
+    const modalEl = layEl("#modal", HTMLElement);
+    const ctDangTaiEl = layEl("#ct-dang-tai", HTMLElement);
+    const ctLoiEl = layEl("#ct-loi", HTMLElement);
+    const ctNoiDungEl = layEl("#ct-noi-dung", HTMLElement);
     const m = state.modal;
 
-    modalEl.hidden = !m.dangMo;
+    modalEl.hidden = m.loai === "dong";
+    ctDangTaiEl.hidden = m.loai !== "dang-tai";
+    ctLoiEl.hidden = m.loai !== "loi";
+    ctNoiDungEl.hidden = m.loai !== "thanh-cong";
 
-    if (!m.dangMo) return;
-
-    ctDangTaiEl.hidden = !m.dangTai;
-    ctLoiEl.hidden = !m.loi;
-    ctNoiDungEl.hidden = !m.duLieu;
-
-    if (m.loi)
+    // Trong từng case, TS tự thu hẹp m → chỉ nhánh "loi" mới đọc được thongBao, nhánh "thanh-cong" mới có duLieu
+    switch (m.loai)
     {
-        ctLoiEl.textContent = m.loi;
-    }
-
-    if (m.duLieu)
-    {
-        renderChiTietModal(m.duLieu);
+        case "dong":
+        case "dang-tai":
+            return;
+        case "loi":
+            ctLoiEl.textContent = m.thongBao;
+            return;
+        case "thanh-cong":
+            renderChiTietModal(m.duLieu);
+            return;
+        default:
+            chuaXuLy(m);
     }
 }
 
-function renderChiTietModal(pokemon)
+function renderChiSo(pokemon: Pokemon): void
 {
-    const tplLoai = document.querySelector("#tpl-loai");
-    const tplChiSo = document.querySelector("#tpl-chi-so");
+    const tplChiSo = layEl("#tpl-chi-so", HTMLTemplateElement);
+    const ctChiSoEl = layEl("#ct-chi-so", HTMLUListElement);
 
-    const anhEl = document.querySelector("#ct-anh");
+    ctChiSoEl.replaceChildren(...pokemon.stats.map(({ base_stat, stat }) => {
+        const li = nhanBan(tplChiSo);
+        layEl(".chi-so-ten", HTMLElement, li).textContent = stat.name;
+        layEl(".chi-so-so", HTMLElement, li).textContent = String(base_stat);
+        layEl(".thanh-gia-tri", HTMLElement, li).style.width = `${(base_stat / CHI_SO_TOI_DA) * 100}%`;
+        return li;
+    }));
+}
+
+function renderChieuThuc(pokemon: Pokemon): void
+{
+    const ctChieuEl = layEl("#ct-chieu", HTMLOListElement);
+
+    ctChieuEl.replaceChildren(...pokemon.moves.slice(0, SO_CHIEU_HIEN_THI).map(({ move }) => {
+        const li = document.createElement("li");
+        li.textContent = move.name;
+        return li;
+    }));
+}
+
+function renderChiTietModal(pokemon: Pokemon): void
+{
+    const anhEl = layEl("#ct-anh", HTMLImageElement);
     anhEl.src = pokemon.sprites.front_default ?? "";
     anhEl.alt = pokemon.name;
 
-    document.querySelector("#ct-so").textContent = `#${String(pokemon.id).padStart(3, "0")}`;
-    document.querySelector("#ct-ten").textContent = pokemon.name;
+    layEl("#ct-so", HTMLElement).textContent = dinhDangSo(pokemon.id);
+    layEl("#ct-ten", HTMLElement).textContent = pokemon.name;
+    layEl("#ct-chieu-cao", HTMLElement).textContent = `${pokemon.height / 10} m`;
+    layEl("#ct-can-nang", HTMLElement).textContent = `${pokemon.weight / 10} kg`;
 
-    const ctLoaiEl = document.querySelector("#ct-loai");
-    ctLoaiEl.innerHTML = "";
-    pokemon.types.forEach(({ type }) => {
-        const loaiEl = tplLoai.content.firstElementChild.cloneNode(true);
-        loaiEl.textContent = type.name;
-        loaiEl.classList.add(`loai-${type.name}`);
-        ctLoaiEl.append(loaiEl);
-    });
-
-    document.querySelector("#ct-chieu-cao").textContent = `${pokemon.height / 10} m`;
-    document.querySelector("#ct-can-nang").textContent = `${pokemon.weight / 10} kg`;
-
-    const ctChiSoEl = document.querySelector("#ct-chi-so");
-    ctChiSoEl.innerHTML = "";
-    pokemon.stats.forEach(({ base_stat, stat }) => {
-        const li = tplChiSo.content.firstElementChild.cloneNode(true);
-        li.querySelector(".chi-so-ten").textContent = stat.name;
-        li.querySelector(".chi-so-so").textContent = base_stat;
-        li.querySelector(".thanh-gia-tri").style.width = `${(base_stat / 255) * 100}%`;
-        ctChiSoEl.append(li);
-    });
-
-    const ctChieuEl = document.querySelector("#ct-chieu");
-    ctChieuEl.innerHTML = "";
-    pokemon.moves.slice(0, 5).forEach(({ move }) => {
-        const li = document.createElement("li");
-        li.textContent = move.name;
-        ctChieuEl.append(li);
-    });
+    renderLoai(pokemon, layEl("#ct-loai", HTMLElement));
+    renderChiSo(pokemon);
+    renderChieuThuc(pokemon);
 }
 
-function renderTab()
+function renderTab(): void
 {
     document.querySelectorAll(".tab").forEach(tabEl => {
-        tabEl.classList.toggle("dang-chon", tabEl.dataset.tab === state.tabDangChon);
+        // querySelectorAll trả về Element (không có dataset) → thu hẹp trước khi dùng
+        if (tabEl instanceof HTMLElement)
+            tabEl.classList.toggle("dang-chon", tabEl.dataset.tab === state.tabDangChon);
     });
 }
 
-export function render()
+export function render(): void
 {
+    const dsPokemon = layDsPokemon(state.dsPokemon);
     const dsHienThi = state.tabDangChon === "yeu-thich"
-                    ? state.dsPokemon.filter(t => state.dsYeuThich.includes(t.name))
-                    : state.dsPokemon;
-
+                    ? dsPokemon.filter(p => state.dsYeuThich.includes(p.name))
+                    : dsPokemon;
 
     renderDanhSach(dsHienThi);
-    renderTrangThai();
+    renderTrangThai();   // chạy SAU renderDanhSach vì skeleton được thêm vào lưới vừa làm trống
     renderDem();
     renderModal();
     renderTab();
