@@ -1,18 +1,12 @@
-* {
+/* Chỉ áp cho máy tính, không lan ra cả trang như `*` / `body` */
+.may-tinh,
+.may-tinh * {
   box-sizing: border-box;
 }
 
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  margin: 0;
-  background: #1e1e1e;
-  font-family: "Segoe UI", sans-serif;
-}
-
 .may-tinh {
+  margin: 24px auto;
+  font-family: "Segoe UI", sans-serif;
   width: 320px;
   border-radius: 16px;
   overflow: hidden;

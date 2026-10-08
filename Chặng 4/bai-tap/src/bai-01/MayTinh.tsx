@@ -1,38 +1,69 @@
-import styles from "./MayTinh.module.css"
+import styles from "./MayTinh.module.css";
 
-export function MayTinh()
-{
-    return (
-        <>
-            <div className={styles["may-tinh"]}>
-                <div id="man-hinh" className={styles["man-hinh"]}>0</div>
+type LoaiNut = "so" | "toan-tu" | "hanh-dong" | "bang";
 
-                <div className={styles["ban-phim"]}>
-                <button className={"nut nut-hanh-dong"} data-loai="hanh-dong" data-gia-tri="xoa">C</button>
-                <button className={styles["nut nut-hanh-dong"]} data-loai="hanh-dong" data-gia-tri="doi-dau">+/-</button>
-                <button className={styles["nut nut-hanh-dong"]} data-loai="hanh-dong" data-gia-tri="phan-tram">%</button>
-                <button className={styles["nut nut-toan-tu"]} data-loai="toan-tu" data-gia-tri="/">÷</button>
+interface ButtonMayTinh {
+  loai: LoaiNut;
+  giaTri: string;
+  chu: string;
+  rong2Cot?: boolean;
+}
 
-                <button className={styles["nut nut-so"]} data-loai="so" data-gia-tri="7">7</button>
-                <button className={styles["nut nut-so"]} data-loai="so" data-gia-tri="8">8</button>
-                <button className={styles["nut nut-so"]} data-loai="so" data-gia-tri="9">9</button>
-                <button className={styles["nut nut-toan-tu"]} data-loai="toan-tu" data-gia-tri="*">×</button>
+const ds: ButtonMayTinh[] = [
+  { loai: "hanh-dong", giaTri: "xoa", chu: "C" },
+  { loai: "hanh-dong", giaTri: "doi-dau", chu: "+/-" },
+  { loai: "hanh-dong", giaTri: "phan-tram", chu: "%" },
+  { loai: "toan-tu", giaTri: "/", chu: "÷" },
 
-                <button className={styles["nut nut-so"]} data-loai="so" data-gia-tri="4">4</button>
-                <button className={styles["nut nut-so"]} data-loai="so" data-gia-tri="5">5</button>
-                <button className={styles["nut nut-so"]} data-loai="so" data-gia-tri="6">6</button>
-                <button className={styles["nut nut-toan-tu"]} data-loai="toan-tu" data-gia-tri="-">−</button>
+  { loai: "so", giaTri: "7", chu: "7" },
+  { loai: "so", giaTri: "8", chu: "8" },
+  { loai: "so", giaTri: "9", chu: "9" },
+  { loai: "toan-tu", giaTri: "*", chu: "×" },
 
-                <button className={styles["nut nut-so"]} data-loai="so" data-gia-tri="1">1</button>
-                <button className={styles["nut nut-so"]} data-loai="so" data-gia-tri="2">2</button>
-                <button className={styles["nut nut-so"]} data-loai="so" data-gia-tri="3">3</button>
-                <button className={styles["nut nut-toan-tu"]} data-loai="toan-tu" data-gia-tri="+">+</button>
+  { loai: "so", giaTri: "4", chu: "4" },
+  { loai: "so", giaTri: "5", chu: "5" },
+  { loai: "so", giaTri: "6", chu: "6" },
+  { loai: "toan-tu", giaTri: "-", chu: "−" },
 
-                <button className={styles["nut nut-so nut-0"]} data-loai="so" data-gia-tri="0">0</button>
-                <button className={styles["nut nut-hanh-dong"]} data-loai="hanh-dong" data-gia-tri="thap-phan">.</button>
-                <button className={styles["nut nut-bang"]} data-loai="hanh-dong" data-gia-tri="bang">=</button>
-                </div>
-            </div>
-        </>
-    )
+  { loai: "so", giaTri: "1", chu: "1" },
+  { loai: "so", giaTri: "2", chu: "2" },
+  { loai: "so", giaTri: "3", chu: "3" },
+  { loai: "toan-tu", giaTri: "+", chu: "+" },
+
+  { loai: "so", giaTri: "0", chu: "0", rong2Cot: true },
+  { loai: "hanh-dong", giaTri: "thap-phan", chu: "." },
+  { loai: "bang", giaTri: "bang", chu: "=" },
+];
+
+// Mỗi loại nút một class màu — nút số dùng màu mặc định của .nut nên để trống
+const LOP_MAU: Record<LoaiNut, string | undefined> = {
+  so: undefined,
+  "toan-tu": styles["nut-toan-tu"],
+  "hanh-dong": styles["nut-hanh-dong"],
+  bang: styles["nut-bang"],
+};
+
+function cx(...lop: (string | false | null | undefined)[]) {
+  return lop.filter(Boolean).join(" ");
+}
+
+function layLopNut(nut: ButtonMayTinh) {
+  return cx(styles.nut, LOP_MAU[nut.loai], nut.rong2Cot && styles["nut-0"]);
+}
+
+export function MayTinh() {
+  return (
+    <div className={styles["may-tinh"]}>
+      <div className={styles["man-hinh"]}>0</div>
+
+      <div className={styles["ban-phim"]}>
+        {ds.map((nut, index) => (
+          // key={index} tạm thời theo đề — file 04 sẽ giải thích vì sao không nên
+          <button key={index} className={layLopNut(nut)}>
+            {nut.chu}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 }
