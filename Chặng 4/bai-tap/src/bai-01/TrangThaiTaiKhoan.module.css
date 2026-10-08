@@ -1,0 +1,22 @@
+/* Dáng chung của mọi huy hiệu */
+.huyHieu {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Mỗi vai trò một màu — gắn kèm cùng .huyHieu */
+.admin {
+  background-color: #dc2626;
+}
+
+.thanhVien {
+  background-color: #2563eb;
+}
+
+.khach {
+  background-color: #6b7280;
+}

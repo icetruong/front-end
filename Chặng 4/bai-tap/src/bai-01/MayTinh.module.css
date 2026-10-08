@@ -1,0 +1,85 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background: #1e1e1e;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.may-tinh {
+  width: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.man-hinh {
+  background: #111;
+  color: #fff;
+  text-align: right;
+  padding: 24px 20px;
+  font-size: clamp(1.5rem, 8vw, 3rem);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Gợi ý: khi số quá dài, JS có thể toggle class này để chữ nhỏ lại, không tràn khung */
+.man-hinh.man-hinh--dai {
+  font-size: 1.5rem;
+}
+
+.ban-phim {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: #333;
+}
+
+.nut {
+  border: none;
+  padding: 20px 0;
+  font-size: 1.25rem;
+  background: #2b2b2b;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.nut:hover {
+  background: #3a3a3a;
+}
+
+.nut:active {
+  background: #4a4a4a;
+}
+
+.nut-hanh-dong {
+  background: #555;
+}
+
+.nut-hanh-dong:hover {
+  background: #666;
+}
+
+.nut-toan-tu,
+.nut-bang {
+  background: #ff9500;
+}
+
+.nut-toan-tu:hover,
+.nut-bang:hover {
+  background: #ffaa33;
+}
+
+.nut-0 {
+  grid-column: span 2;
+  text-align: left;
+  padding-left: 28px;
+}
