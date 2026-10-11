@@ -1,0 +1,252 @@
+/* Chuyển từ style.css của Pokédex chặng 3.
+   Mọi selector nằm dưới .pokedex để không đụng CSS chung của app (index.css, App.css). */
+
+.pokedex {
+    --nen: #f4f5f7;
+    --the: #ffffff;
+    --chu: #1f2933;
+    --chu-phu: #6b7280;
+    --vien: #e5e7eb;
+    --chinh: #e3350d;
+    --chinh-dam: #b92a0a;
+    --bo-goc: 12px;
+    --bong: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    text-align: left;
+    background: var(--nen);
+    color: var(--chu);
+}
+
+.pokedex * { box-sizing: border-box; }
+
+/* ===== Đầu trang ===== */
+.pokedex .dau-trang {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 16px;
+    background: var(--the);
+    box-shadow: var(--bong);
+}
+.pokedex .dau-trang h1 {
+    margin: 0 0 12px;
+    color: var(--chinh);
+}
+.pokedex .thanh-cong-cu {
+    display: flex;
+    gap: 8px;
+}
+.pokedex .o-tim {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 14px;
+    border: 1px solid var(--vien);
+    border-radius: 8px;
+    font-size: 1rem;
+}
+.pokedex .loc-loai {
+    padding: 10px;
+    border: 1px solid var(--vien);
+    border-radius: 8px;
+    font-size: 1rem;
+    text-transform: capitalize;
+}
+.pokedex .o-tim:focus,
+.pokedex .loc-loai:focus {
+    outline: 2px solid var(--chinh);
+    outline-offset: 1px;
+}
+
+.pokedex .cac-tab {
+    display: flex;
+    gap: 4px;
+    margin-top: 12px;
+}
+.pokedex .tab {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--chu-phu);
+    cursor: pointer;
+}
+.pokedex .tab.dang-chon {
+    background: var(--chu);
+    color: #fff;
+}
+
+/* ===== Nội dung ===== */
+.pokedex .noi-dung {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.pokedex .luoi {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* ===== Thẻ Pokémon =====
+   Viền, nền, bo góc do ui/The lo. <li> chỉ lo bấm, hover và làm mốc cho nút ☆. */
+.pokedex .o-pokemon {
+    position: relative;
+    display: flex;
+    border-radius: var(--bo-goc);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+/* Cho The (con trực tiếp) giãn hết chiều cao ô lưới → các thẻ cùng hàng cao bằng nhau */
+.pokedex .o-pokemon > * { flex: 1; }
+.pokedex .o-pokemon:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+.pokedex .the-pokemon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pokedex .so {
+    align-self: flex-start;
+    color: var(--chu-phu);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.pokedex .anh {
+    width: 96px;
+    height: 96px;
+    image-rendering: pixelated;
+}
+.pokedex .ten {
+    margin: 4px 0 8px;
+    font-size: 1rem;
+    text-transform: capitalize;
+    word-break: break-word;
+    text-align: center;
+}
+
+/* Ghi đè style mặc định của Nut (nền màu, padding) cho nút ☆ */
+.pokedex .nut-yeu-thich {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 1.2rem;
+    color: var(--chu-phu);
+    cursor: pointer;
+}
+.pokedex .nut-yeu-thich:hover { background: none; color: #f5b301; }
+.pokedex .nut-yeu-thich.da-thich { color: #f5b301; }
+
+/* Nhãn loại: màu nền do HuyHieu + mauLoai lo, ở đây chỉ xếp hàng */
+.pokedex .ds-loai {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    text-transform: capitalize;
+}
+
+/* ===== Thông báo lỗi / rỗng ===== */
+.pokedex .thong-bao {
+    padding: 48px 16px;
+    text-align: center;
+    color: var(--chu-phu);
+}
+.pokedex .thong-bao-icon {
+    margin: 0;
+    font-size: 2.5rem;
+}
+.pokedex .thong-bao-loi { color: var(--chinh-dam); }
+
+/* ===== Chân trang ===== */
+.pokedex .chan-trang {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 16px 40px;
+    color: var(--chu-phu);
+}
+.pokedex .moc-cuoi {
+    flex-basis: 100%;
+    height: 1px;
+}
+
+/* ===== Nội dung modal chi tiết (khung modal do ui/Modal lo) ===== */
+.pokedex .ct-dau {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.pokedex .ct-dau .ds-loai { justify-content: flex-start; }
+.pokedex .ct-anh {
+    width: 160px;
+    height: 160px;
+    flex-shrink: 0;
+    image-rendering: pixelated;
+}
+
+.pokedex .ct-kich-thuoc {
+    display: flex;
+    gap: 24px;
+    margin: 16px 0;
+}
+.pokedex .ct-kich-thuoc dt { color: var(--chu-phu); font-size: 0.85rem; }
+.pokedex .ct-kich-thuoc dd { margin: 0; font-weight: 600; }
+
+.pokedex .ct-muc {
+    margin: 20px 0 8px;
+    font-size: 1rem;
+}
+
+.pokedex .ds-chi-so {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.pokedex .chi-so {
+    display: grid;
+    grid-template-columns: 110px 36px 1fr;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+}
+.pokedex .chi-so-ten { color: var(--chu-phu); text-transform: capitalize; }
+.pokedex .chi-so-so { font-weight: 600; text-align: right; }
+.pokedex .thanh {
+    height: 8px;
+    background: var(--vien);
+    border-radius: 999px;
+    overflow: hidden;
+}
+.pokedex .thanh-gia-tri {
+    display: block;
+    height: 100%;
+    background: var(--chinh);
+    border-radius: 999px;
+}
+
+.pokedex .ds-chieu {
+    margin: 0;
+    padding-left: 20px;
+    text-transform: capitalize;
+}
+
+/* ===== Màn hình nhỏ ===== */
+@media (max-width: 480px) {
+    .pokedex .luoi { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .pokedex .ct-dau { flex-direction: column; text-align: center; }
+    .pokedex .ct-dau .ds-loai { justify-content: center; }
+    .pokedex .ct-anh { width: 120px; height: 120px; }
+}

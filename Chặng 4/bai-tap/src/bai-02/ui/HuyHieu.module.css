@@ -1,0 +1,37 @@
+/* Style chung */
+.huy-hieu {
+  --mau-nen: #f3f4f6;
+  --mau-chu: #374151;
+
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
+  background: var(--mau-nen);
+  color: var(--mau-chu);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* Biến thể màu: chỉ đổi biến */
+.xam {
+  --mau-nen: #f3f4f6;
+  --mau-chu: #374151;
+}
+
+.xanh {
+  --mau-nen: #dbeafe;
+  --mau-chu: #1d4ed8;
+}
+
+.do {
+  --mau-nen: #fee2e2;
+  --mau-chu: #b91c1c;
+}
+
+.vang {
+  --mau-nen: #fef3c7;
+  --mau-chu: #92400e;
+}

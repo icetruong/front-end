@@ -1,0 +1,36 @@
+/* Khung thẻ */
+.the {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+/* Viền màu nhấn khi noiBat */
+.noi-bat {
+  border: 2px solid #2563eb;
+  box-shadow: 0 4px 12px rgb(37 99 235 / 0.15);
+}
+
+/* Ba khe */
+.dau-the {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 600;
+}
+
+.than-the {
+  padding: 1rem;
+  flex: 1;
+}
+
+.chan-the {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}

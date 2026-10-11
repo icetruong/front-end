@@ -1,0 +1,46 @@
+/* Khung thông báo */
+.thong-bao {
+  --mau-nen: #f3f4f6;
+  --mau-chu: #111827;
+  --mau-nhan: #6b7280;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--mau-nhan);
+  border-radius: 8px;
+  background: var(--mau-nen);
+  color: var(--mau-chu);
+}
+
+/* Ba biến thể, trùng giá trị của prop loai */
+.thanh-cong {
+  --mau-nen: #dcfce7;
+  --mau-chu: #14532d;
+  --mau-nhan: #16a34a;
+}
+
+.loi {
+  --mau-nen: #fee2e2;
+  --mau-chu: #7f1d1d;
+  --mau-nhan: #dc2626;
+}
+
+.canh-bao {
+  --mau-nen: #fef3c7;
+  --mau-chu: #78350f;
+  --mau-nhan: #d97706;
+}
+
+.noi-dung {
+  flex: 1;
+}
+
+/* Chỗ đặt nút "Thử lại" / "Bỏ qua" */
+.hanh-dong {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}

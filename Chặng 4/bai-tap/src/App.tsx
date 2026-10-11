@@ -4,6 +4,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 import "./App.css";
 import DoanRender from "./bai-01/DoanRender";
+import { Pokedex } from "./bai-02/bai-06/Pokedex";
 
 // let dem = 0;
 
@@ -147,6 +148,7 @@ function App() {
       <div className="ticks"></div>
       <section id="spacer"></section>
       <DoanRender />
+      <Pokedex />
       {/* <Khach />
       <Khach />
       <Khach />

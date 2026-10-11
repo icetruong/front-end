@@ -1,0 +1,82 @@
+/* Style chung cho mọi nút */
+.nut {
+  --mau-nen: #2563eb;
+  --mau-chu: #ffffff;
+  --mau-vien: #2563eb;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  border: 2px solid var(--mau-vien);
+  border-radius: 8px;
+  background: var(--mau-nen);
+  color: var(--mau-chu);
+
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s, opacity 0.15s;
+}
+
+.nut:hover:not(:disabled) {
+  filter: brightness(0.9);
+}
+
+.nut:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+.nut:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Biến thể: chỉ đổi biến màu */
+.chinh {
+  --mau-nen: #2563eb;
+  --mau-chu: #ffffff;
+  --mau-vien: #2563eb;
+}
+
+.phu {
+  --mau-nen: #e5e7eb;
+  --mau-chu: #111827;
+  --mau-vien: #e5e7eb;
+}
+
+.vien {
+  --mau-nen: transparent;
+  --mau-chu: #2563eb;
+  --mau-vien: #2563eb;
+}
+
+.nguy-hiem {
+  --mau-nen: #dc2626;
+  --mau-chu: #ffffff;
+  --mau-vien: #dc2626;
+}
+
+/* Kích thước */
+.nho {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.vua {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+.lon {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+}
+
+/* Chiếm hết chiều rộng */
+.toan-chieu-rong {
+  display: flex;
+  width: 100%;
+}

@@ -1,0 +1,24 @@
+/* Dãy sao + số điểm */
+.danh-gia {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.sao {
+  letter-spacing: 2px;
+}
+
+.sao-day {
+  color: #f59e0b;
+}
+
+.sao-rong {
+  color: #d1d5db;
+}
+
+/* Chữ "4/5" nhỏ bên cạnh */
+.diem {
+  color: #6b7280;
+}

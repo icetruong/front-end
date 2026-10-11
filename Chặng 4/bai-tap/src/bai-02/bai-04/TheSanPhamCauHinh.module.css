@@ -1,0 +1,106 @@
+/* Khung thẻ sản phẩm */
+.the-san-pham {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 220px;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+/* Gắn thêm vào khung khi hetHang */
+.het-hang {
+  opacity: 0.6;
+}
+
+/* Huy hiệu "Mới" nằm đè góc trên trái ảnh */
+.huy-hieu-moi {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.anh {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #f3f4f6;
+}
+
+.ten {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Hàng giá: giá mới, giá cũ, % giảm */
+.khoi-gia {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.gia-moi {
+  color: #dc2626;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.gia-cu {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  text-decoration: line-through;
+}
+
+.phan-tram {
+  padding: 0 0.375rem;
+  border-radius: 4px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Dãy sao */
+.danh-gia {
+  color: #f59e0b;
+  letter-spacing: 2px;
+}
+
+.nut-mua {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nut-mua:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Chữ "Hết hàng" thay cho nút */
+.chu-het-hang {
+  margin: 0;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #6b7280;
+  text-align: center;
+  font-weight: 600;
+}

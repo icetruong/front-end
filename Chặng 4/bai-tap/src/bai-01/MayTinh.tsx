@@ -7,7 +7,17 @@ interface ButtonMayTinh {
   giaTri: string;
   chu: string;
   rong2Cot?: boolean;
-}
+};
+
+type ManHinhProps = {
+  giaTri: string;
+};
+
+type BanPhimProps = {
+  readonly dsNut: ButtonMayTinh[]
+};
+
+type NutMayTinhProps = ButtonMayTinh;
 
 const ds: ButtonMayTinh[] = [
   { loai: "hanh-dong", giaTri: "xoa", chu: "C" },
@@ -51,19 +61,33 @@ function layLopNut(nut: ButtonMayTinh) {
   return cx(styles.nut, LOP_MAU[nut.loai], nut.rong2Cot && styles["nut-0"]);
 }
 
+function ManHinh({giaTri} : ManHinhProps)
+{
+  return <div className={styles["man-hinh"]}>{giaTri}</div>;
+}
+
+function NutMayTinh(nut : NutMayTinhProps)
+{
+  return <button className={layLopNut(nut)}>{nut.chu}</button>;
+}
+
+function BanPhim({dsNut} : BanPhimProps)
+{
+  return (
+    <div className={styles["ban-phim"]}>
+        {dsNut.map((nut, index) => (
+          // key={index} tạm thời theo đề — file 04 sẽ giải thích vì sao không nên
+          <NutMayTinh key={index} {...nut}/>
+        ))}
+      </div>
+  );
+}
+
 export function MayTinh() {
   return (
     <div className={styles["may-tinh"]}>
-      <div className={styles["man-hinh"]}>0</div>
-
-      <div className={styles["ban-phim"]}>
-        {ds.map((nut, index) => (
-          // key={index} tạm thời theo đề — file 04 sẽ giải thích vì sao không nên
-          <button key={index} className={layLopNut(nut)}>
-            {nut.chu}
-          </button>
-        ))}
-      </div>
+      <ManHinh giaTri="0"/>
+      <BanPhim dsNut={ds}/>    
     </div>
   );
 }
