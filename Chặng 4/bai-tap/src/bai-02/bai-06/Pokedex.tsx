@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CacTab } from "./CacTab";
 import { ChanTrang } from "./ChanTrang";
 import { DanhSachPokemon } from "./DanhSachPokemon";
@@ -20,37 +21,9 @@ export interface Pokemon {
     moves: { move: { name: string } }[];
 }
 
-const noiDungTimKiem = "";
+type SapXep = "ten" | "hp" | "id"; 
+type Tab = "tat-ca" | "yeu-thich";
 
-function timKiem()
-{
-    console.log("tìm kiếm");
-}
-
-function chonLoai(loai: string)
-{
-    console.log("chọn loại" + loai);
-}
-
-function moChiTiet(id: number)
-{
-    console.log("mở chi tiết" + id);
-}
-
-function dongChiTiet()
-{
-    console.log("đóng chi tiết");
-}
-
-function thuLai()
-{
-    console.log("thử lại");
-}
-
-function chonTab()
-{
-    console.log("chọn tab");
-}
 
 // Dữ liệu giả — sau này sẽ thay bằng dữ liệu fetch từ PokeAPI
 const URL_ANH = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
@@ -167,31 +140,135 @@ const dsPokemon: Pokemon[] = [
     },
 ];
 
-// Pokémon đang mở trong modal. Chưa có state nên gán cứng:
-// đổi thành null để ẩn modal và xem danh sách. File 03 sẽ thay bằng useState.
-const pokemonDangXem: Pokemon | null = dsPokemon[0];
-
 export function Pokedex()
 {
+    const [noiDungTimKiem, setNoiDungTimKiem] = useState("");
+    const [loai, setLoai] = useState("");
+    const [idDangXem, setIdDangXem] = useState<number | null>(null);
+    const [noiDungSapXep, setNoiDungSapXep] = useState<SapXep | null>(null);
+
+    const dsHienThi = layDanhSachHienThi();
+
+    const pokemonDangXem = layPokemonDangXem(idDangXem);
+
+    const [coLoi, setCoLoi] = useState(false);
+
+    const [tabDangChon, setTabDangChon] = useState<Tab>("tat-ca");
+
+    function layDanhSachHienThi() : Pokemon[]
+    {
+        let dsHienThi : Pokemon[] = dsPokemon;
+
+        if(noiDungTimKiem !== "")
+            dsHienThi = dsHienThi.filter((pokemon) => pokemon.name === noiDungTimKiem);
+
+        if(loai !== "")
+        {
+            dsHienThi = dsHienThi.filter((pokemon) => {
+                pokemon.types.forEach(({type}) => {
+                    if(type.name === loai)
+                        return true;
+                });
+                return false;
+            })
+        }
+
+        if(noiDungSapXep)
+        {
+            switch (noiDungSapXep) {
+                case "id": 
+                    dsHienThi = dsHienThi.toSorted((a, b) => a.id - b.id);
+                    break;
+                case "ten":
+                    dsHienThi = dsHienThi.toSorted((a, b) => a.name.localeCompare(b.name, "vi"));
+                    break;
+                case "hp":
+                    dsHienThi = dsHienThi.toSorted((a, b) => findHpFromPokemon(a) - findHpFromPokemon(b));
+                    break;
+            }
+        }
+
+        return dsHienThi;
+    }
+
+    function findHpFromPokemon(pokemon: Pokemon) : number
+    {
+        const stats = pokemon.stats.find((st) => st.stat.name === "hp");
+        if(!stats)
+            return 0;
+
+        return stats.base_stat;
+    }
+
+    function timKiem(tuKhoa: string)
+    {
+        if(tuKhoa !== noiDungTimKiem)
+            setNoiDungTimKiem(tuKhoa);
+        else
+            setNoiDungTimKiem("");
+    }
+
+    function chonLoai(loai: string)
+    {
+        if(loai === "tat-ca")
+            setLoai("");
+        else
+            setLoai(loai);
+    }
+
+    function moChiTiet(id: number)
+    {
+        setIdDangXem(id);
+    }
+
+    function layPokemonDangXem(id: number| null) : Pokemon | null | undefined
+    {
+        if(id === null)
+            return null;
+
+        return dsPokemon.find((pokemon) => pokemon.id === id);
+    }
+
+    function sapXep(sapXep: SapXep)
+    {
+        if(sapXep !== noiDungSapXep)
+            setNoiDungSapXep(sapXep);
+        else
+            setNoiDungSapXep(null);
+    }
+    function dongChiTiet()
+    {
+        setIdDangXem(null);
+    }
+
+    function thuLai()
+    {
+        console.log("thử lại");
+    }
+
+    function chonTab(tab: Tab)
+    {
+        setTabDangChon(tab);
+    }
     return (
         <div className="pokedex">
-       <DauTrang
+        <DauTrang
                 name="Pokédex"
-                thanhCongCu = {<ThanhCongCu timKiem={noiDungTimKiem} dsLoai={dsType} onTimKiem={timKiem} onChonLoai={chonLoai}/>}
-                tabYeuThich = {<CacTab tabDangChon="tat-ca" onChonTab={chonTab}/>}
+                thanhCongCu = {<ThanhCongCu dsLoai={dsType} onTimKiem={timKiem} onChonLoai={chonLoai} onSapXep={sapXep}/>}
+                tabYeuThich = {<CacTab tabDangChon={tabDangChon} onChonTab={chonTab}/>}
         />    
         <main className="noi-dung">
             {/* Trạng thái rỗng */}
-            <TrangThaiRong tuKhoa="test"/>
+            {dsHienThi.length === 0 && <TrangThaiRong tuKhoa="test"/>}
 
             {/* Trạng thái lỗi */}
-            <KhungLoi thongBao="có lỗi xảy ra" onThuLai={thuLai}/>
+            {coLoi && <KhungLoi thongBao="có lỗi xảy ra" onThuLai={thuLai}/>}
 
             {/* Danh sách: mỗi ThePokemon tự gắn onClick, gọi onMoChiTiet(id) */}
-            <DanhSachPokemon ds={dsPokemon} onMoChiTiet={moChiTiet}/>
+            <DanhSachPokemon ds={dsHienThi} onMoChiTiet={moChiTiet}/>
         </main> 
 
-        <ChanTrang daTai={dsPokemon.length} tongSo={dsPokemon.length}/>
+        <ChanTrang daTai={dsHienThi.length} tongSo={dsPokemon.length}/>
 
         {pokemonDangXem && <ModalChiTiet pokemon={pokemonDangXem} onDong={dongChiTiet} />}
         </div>

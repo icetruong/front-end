@@ -8,7 +8,7 @@ type KhungLoiProps = {
 export function KhungLoi({onThuLai, thongBao} : KhungLoiProps)
 {
     return (
-        <div className="thong-bao thong-bao-loi" hidden>
+        <div className="thong-bao thong-bao-loi">
             <p className="thong-bao-icon">⚠️</p>
             <p>{thongBao}</p>
             <Nut className="nut" onClick={onThuLai}>Thử lại</Nut>

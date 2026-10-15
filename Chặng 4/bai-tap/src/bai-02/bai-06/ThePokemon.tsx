@@ -7,10 +7,12 @@ import type { Pokemon } from "./Pokedex";
 
 type ThePokemonProps = {
     pokemon: Pokemon,
-    onMoChiTiet: (id: number) => void
+    yeuThich: boolean,
+    onMoChiTiet: (id: number) => void,
+    onYeuThich: (id: number) => void
 }
 
-export function ThePokemon({pokemon, onMoChiTiet} : ThePokemonProps)
+export function ThePokemon({pokemon, yeuThich, onMoChiTiet, onYeuThich} : ThePokemonProps)
 {
     return (
         // <li> ở ngoài cùng để <ul> chỉ chứa <li>; khung thẻ do The lo
@@ -18,12 +20,12 @@ export function ThePokemon({pokemon, onMoChiTiet} : ThePokemonProps)
             <The>
                 <div className="the-pokemon">
                     <Nut
-                        className="nut-yeu-thich"
+                        className={yeuThich ? `nut-yeu-thich da-thich` : `nut-yeu-thich`}
                         aria-label="Yêu thích"
                         onClick={(e) => {
                             // Chặn nổi bọt: không để cú bấm ☆ lan lên <li> và mở modal
                             e.stopPropagation();
-                            console.log("yêu thích " + pokemon.id);
+                            onYeuThich(pokemon.id);
                         }}
                     >
                         ☆

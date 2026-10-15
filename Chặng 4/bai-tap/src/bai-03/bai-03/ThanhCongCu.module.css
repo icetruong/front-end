@@ -1,0 +1,18 @@
+.thanh-cong-cu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hang {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bo-dem {
+  margin-left: auto;
+  color: #6b7280;
+  font-size: 0.9rem;
+}

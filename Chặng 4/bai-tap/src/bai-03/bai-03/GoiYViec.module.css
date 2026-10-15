@@ -1,0 +1,10 @@
+.goi-y {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nhan {
+  color: #6b7280;
+}

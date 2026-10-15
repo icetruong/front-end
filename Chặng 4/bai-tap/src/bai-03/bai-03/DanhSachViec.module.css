@@ -1,0 +1,17 @@
+.khung {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.danh-sach {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rong {
+  margin: 0;
+  color: #9ca3af;
+  text-align: center;
+}

@@ -1,0 +1,39 @@
+.dong {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.o {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.o-xong {
+  border-color: #22c55e;
+  background: #22c55e;
+}
+
+.noi-dung {
+  flex: 1;
+}
+
+.xong {
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+.hanh-dong {
+  display: flex;
+  gap: 0.25rem;
+}
