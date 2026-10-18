@@ -584,6 +584,8 @@ Lập bảng trong `ghi-chu.md`:
 
 Có một thao tác cho kết quả **giống nhau** ở cả hai chế độ. Thao tác nào, và vì sao? Đây là lý do nhiều người dùng `key={index}` mà không thấy bug — họ chỉ thêm vào cuối.
 
+> [NOTE] CHƯA LÀM: bảng 4 thao tác × 2 chế độ và câu "thao tác nào giống nhau, vì sao" chưa có câu trả lời (ở đây hay trong `ghi-chu.md` đều được). Không test thì vẫn suy luận được: với mỗi thao tác, viết ra key của từng dòng TRƯỚC và SAU, state đi theo key.
+
 ### Bài 2 — Phát hiện lúc component được tạo mới
 
 Bạn chưa học `useEffect`, nhưng có một mẹo từ file `03`: khởi tạo lười **chỉ chạy khi component được tạo mới**.
@@ -600,12 +602,22 @@ function DongViec({ noiDung }: { noiDung: string }) {
 
 Gắn vào bài 1, rồi:
 
-1. Tải trang — in ra mấy dòng? (Nhớ `StrictMode`)
-2. Với `key={v.id}`, bấm "Thêm lên đầu" — in thêm mấy dòng? Dòng nào?
-3. Với `key={index}`, bấm "Thêm lên đầu" — in thêm mấy dòng? Dòng nào? Vì sao không phải dòng "Việc mới"?
-4. Đổi sang `key={Math.random()}`, gõ một ký tự vào ô ghi chú bất kỳ — in thêm mấy dòng? Ô bạn vừa gõ còn giữ chữ và focus không?
+1. Tải trang — in ra mấy dòng? (Nhớ `StrictMode`) -> in ra 3 dòng
+   > [NOTE] SAI: đề đã nhắc "Nhớ `StrictMode`" — `main.tsx` có bọc `<StrictMode>`, và ở chế độ dev StrictMode gọi hàm khởi tạo lười **2 lần** để bắt lỗi hàm không thuần. → In ra **6 dòng** (mỗi việc 2 lần; React 19 in lần thứ hai màu nhạt hơn). 3 là con số "về mặt ý nghĩa" (3 component được tạo), nhưng con số thực in ra là 6.
+2. Với `key={v.id}`, bấm "Thêm lên đầu" — in thêm mấy dòng? Dòng nào? -> in thêm 1 dòng chính là nội dung vừa thêm
+   > [NOTE] ĐÚNG Ý ✅: chỉ "Việc mới" được tạo mới, 3 dòng cũ giữ key cũ nên được giữ lại. Nhưng nhớ StrictMode → in 2 dòng `TẠO MỚI: Việc mới`.
+3. Với `key={index}`, bấm "Thêm lên đầu" — in thêm mấy dòng? Dòng nào? Vì sao không phải dòng "Việc mới"? -> in thêm 1 dòng nhưng là dòng cuối chứ không phải dòng đầu vì thực tế react ghi nhận là tạo mới index = 4 mà index = 4 trong mảng là phần tử cuối
+   > [NOTE] ĐÚNG HƯỚNG, SAI CHI TIẾT:
+   > - index bắt đầu từ 0: trước có key 0,1,2 → sau có 0,1,2,**3**. Key mới là **3**, không phải 4.
+   > - Nên nói rõ dòng in ra là `TẠO MỚI: Đọc tài liệu` (phần tử ở vị trí 3 sau khi thêm) — đây chính là chỗ "lạ" của câu này.
+   > - Phần "vì sao không phải Việc mới" chưa nói hết: "Việc mới" nằm ở key **0**, mà key 0 đã có từ trước → React **dùng lại** component cũ (giữ state cũ, chỉ đổi prop `noiDung`), nên hàm khởi tạo lười không chạy. Đó cũng là lý do ghi chú của "Học React" nhảy lên dòng "Việc mới".
+   > - StrictMode → in 2 lần.
+4. Đổi sang `key={Math.random()}`, gõ một ký tự vào ô ghi chú bất kỳ — in thêm mấy dòng? Ô bạn vừa gõ còn giữ chữ và focus không? -> in thêm 3 dòng, không giữ chử và focus
+   > [NOTE] SAI — và đây là ví dụ vì sao nên test chứ đừng chỉ suy luận 🙂. Trong code của bạn, `ghiChu` là state của **`DongViec`**. Gõ phím → `setGhiChu` → chỉ **`DongViec` đó** render lại. Cha `ThiNghiemKey` **không** render lại → `.map` không chạy lại → `Math.random()` không được gọi lại → key không đổi.
+   > → Kết quả thật: **in thêm 0 dòng, chữ và focus vẫn còn.**
+   > Bug của `Math.random()` chỉ lộ khi **cha** render lại: ví dụ gõ chữ vào ô rồi bấm một nút bất kỳ ở cha (kể cả "Đảo thứ tự") → tất cả dòng bị tạo mới, in 3 dòng (×2 vì StrictMode = 6), mọi ghi chú và checkbox mất sạch. Muốn thấy "mất chữ sau mỗi lần gõ" như đề tả thì state ghi chú phải nằm ở cha (sẽ học ở file `07`).
 
-Câu 3 là câu đáng suy nghĩ nhất. Câu 4 cho bạn thấy tận mắt vì sao `Math.random()` còn tệ hơn index.
+\Câu 3 là câu đáng suy nghĩ nhất. Câu 4 cho bạn thấy tận mắt vì sao `Math.random()` còn tệ hơn index.
 
 ### Bài 3 — Danh sách thêm/xóa/sắp xếp
 
@@ -617,7 +629,7 @@ Xây danh sách sản phẩm với dữ liệu khởi tạo 6–8 sản phẩm (
 4. Nút sắp xếp theo tên / theo giá / theo danh mục — state lưu **tiêu chí sắp xếp**, danh sách hiển thị tính trong lúc render bằng `toSorted`
 5. Bộ lọc theo danh mục — cũng tính trong lúc render
 6. Hiện kết quả **nhóm theo danh mục** (mục 9), mỗi nhóm có tổng tiền của nhóm
-7. Danh sách rỗng sau khi lọc → hiện thông báo phù hợp
+7. Danh sách rỗng sau khi lọc → hiện thông báo phù hợp -> bạn làm giùm
 8. Mỗi dòng có một ô "số lượng mua" với state riêng (dùng `useState` trong `DongSanPham`). Kiểm tra: sắp xếp lại, đổi chỗ, lọc — số lượng mua có đi đúng theo sản phẩm không?
 
 Câu 4 và câu 2 có liên quan: nếu danh sách được sắp xếp tự động theo giá, nút ▲▼ còn ý nghĩa không? Ghi suy nghĩ của bạn về cách giải quyết mâu thuẫn này vào `ghi-chu.md` — không có đáp án duy nhất.

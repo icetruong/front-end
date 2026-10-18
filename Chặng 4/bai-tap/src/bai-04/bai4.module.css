@@ -1,0 +1,97 @@
+.khung {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  max-width: 640px;
+  height: 360px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.danh-sach {
+  margin: 0;
+  padding: 0.5rem;
+  list-style: none;
+  background: #f9fafb;
+  border-right: 1px solid #e5e7eb;
+}
+
+.nguoi {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font: inherit;
+  color: #111827;
+  cursor: pointer;
+}
+
+.nguoi:hover {
+  background: #f3f4f6;
+}
+
+.dang-chon,
+.dang-chon:hover {
+  background: #dbeafe;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.tro-chuyen {
+  display: flex;
+  flex-direction: column;
+}
+
+.dau-khung {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 1rem;
+  color: #111827;
+}
+
+.tin-nhan {
+  flex: 1;
+  margin: 0;
+  padding: 1rem;
+  color: #9ca3af;
+}
+
+.o-soan {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.o-nhap {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.nut-gui {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: #ffffff;
+  font: inherit;
+  cursor: pointer;
+}

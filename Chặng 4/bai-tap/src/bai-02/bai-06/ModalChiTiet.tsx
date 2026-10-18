@@ -8,10 +8,12 @@ const CHI_SO_TOI_DA = 255;
 
 type ModalChiTietProps = {
     pokemon: Pokemon,
-    onDong: () => void
+    coTheTiepTheo: boolean,
+    onDong: () => void,
+    onTiepTheo: () => void
 }
 
-export function ModalChiTiet({pokemon, onDong} : ModalChiTietProps)
+export function ModalChiTiet({pokemon, coTheTiepTheo, onDong, onTiepTheo} : ModalChiTietProps)
 {
     return (
         <Modal tieuDe={pokemon.name} onDong={onDong}>
@@ -50,6 +52,8 @@ export function ModalChiTiet({pokemon, onDong} : ModalChiTietProps)
             <ol className="ds-chieu">
                 {pokemon.moves.map(({move}) => <li key={move.name}>{move.name}</li>)}
             </ol>
+
+            {<button onClick={() => onTiepTheo()} disabled={!coTheTiepTheo}>Tiếp theo</button>}
         </Modal>
     );
 }

@@ -1,12 +1,11 @@
 import { Nut } from "../ui/Nut";
+import type { SapXep } from "./Pokedex";
 
 const TU_KHOA_TIM_KIEM = [
     "pika",
     "char", 
     "bul"
 ];
-
-type SapXep = "ten" | "hp" | "id"; 
 
 const BO_SAP_XEP: SapXep[] = ['ten', 'id', 'hp'];
 
@@ -27,6 +26,7 @@ export function ThanhCongCu({dsLoai, onTimKiem, onChonLoai, onSapXep} : ThanhCon
                     {tuKhoa}
                 </Nut>
             ))}
+            <Nut kichThuoc="nho" bienThe="vien" onClick={() => onTimKiem("")}>xóa</Nut>
             <select className="loc-loai" onChange={(e) => onChonLoai(e.target.value)}>
                 <option value="">Tất cả loại</option>
                 {/* { JS thêm các <option> lấy từ /type} */}

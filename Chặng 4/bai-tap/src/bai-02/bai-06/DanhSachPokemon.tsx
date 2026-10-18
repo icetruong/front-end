@@ -14,7 +14,14 @@ export function DanhSachPokemon({ds, onMoChiTiet} : DanhSachPokemonProps)
 
     function yeuThich(id: number)
     {
-        setDsYeuThich((d) => new Set(d).add(id));
+        if(dsYeuThich.has(id))
+            setDsYeuThich((d) => {
+                const newD = new Set(d);
+                newD.delete(id);
+                return newD;
+            });
+        else
+            setDsYeuThich((d) => new Set(d).add(id));
     }
 
     return (

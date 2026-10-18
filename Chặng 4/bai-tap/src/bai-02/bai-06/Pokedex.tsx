@@ -3,7 +3,6 @@ import { CacTab } from "./CacTab";
 import { ChanTrang } from "./ChanTrang";
 import { DanhSachPokemon } from "./DanhSachPokemon";
 import { DauTrang } from "./DauTrang";
-import { KhungLoi } from "./KhungLoi";
 import { mauLoai, type LoaiPokemon } from "./mauLoai";
 import { ModalChiTiet } from "./ModalChiTiet";
 import "./Pokedex.css";
@@ -21,7 +20,7 @@ export interface Pokemon {
     moves: { move: { name: string } }[];
 }
 
-type SapXep = "ten" | "hp" | "id"; 
+export type SapXep = "ten" | "hp" | "id";
 type Tab = "tat-ca" | "yeu-thich";
 
 
@@ -151,8 +150,6 @@ export function Pokedex()
 
     const pokemonDangXem = layPokemonDangXem(idDangXem);
 
-    const [coLoi, setCoLoi] = useState(false);
-
     const [tabDangChon, setTabDangChon] = useState<Tab>("tat-ca");
 
     function layDanhSachHienThi() : Pokemon[]
@@ -160,16 +157,12 @@ export function Pokedex()
         let dsHienThi : Pokemon[] = dsPokemon;
 
         if(noiDungTimKiem !== "")
-            dsHienThi = dsHienThi.filter((pokemon) => pokemon.name === noiDungTimKiem);
+            dsHienThi = dsHienThi.filter((pokemon) => pokemon.name.includes(noiDungTimKiem));
 
         if(loai !== "")
         {
             dsHienThi = dsHienThi.filter((pokemon) => {
-                pokemon.types.forEach(({type}) => {
-                    if(type.name === loai)
-                        return true;
-                });
-                return false;
+                return pokemon.types.some(({type}) => type.name === loai);
             })
         }
 
@@ -189,6 +182,14 @@ export function Pokedex()
         }
 
         return dsHienThi;
+    }
+
+    function layDanhSachTheoNhom() : Partial<Record<LoaiPokemon, Pokemon[]>>
+    {
+        return dsHienThi.reduce<Partial<Record<LoaiPokemon, Pokemon[]>>>((acc, pokemon) => {
+            (acc[pokemon.types[0].type.name] ??= []).push(pokemon);
+            return acc;
+        }, {});
     }
 
     function findHpFromPokemon(pokemon: Pokemon) : number
@@ -241,9 +242,10 @@ export function Pokedex()
         setIdDangXem(null);
     }
 
-    function thuLai()
+    function tiepTheo()
     {
-        console.log("thử lại");
+        const i = dsPokemon.findIndex((pokemon) => pokemon.id === idDangXem);
+        setIdDangXem(dsPokemon[i+1].id);
     }
 
     function chonTab(tab: Tab)
@@ -259,10 +261,9 @@ export function Pokedex()
         />    
         <main className="noi-dung">
             {/* Trạng thái rỗng */}
-            {dsHienThi.length === 0 && <TrangThaiRong tuKhoa="test"/>}
+            {dsHienThi.length === 0 && <TrangThaiRong tuKhoa={noiDungTimKiem}/>}
 
-            {/* Trạng thái lỗi */}
-            {coLoi && <KhungLoi thongBao="có lỗi xảy ra" onThuLai={thuLai}/>}
+            {/* Trạng thái lỗi: thêm lại KhungLoi khi fetch PokeAPI thật (file 06) */}
 
             {/* Danh sách: mỗi ThePokemon tự gắn onClick, gọi onMoChiTiet(id) */}
             <DanhSachPokemon ds={dsHienThi} onMoChiTiet={moChiTiet}/>
@@ -270,7 +271,7 @@ export function Pokedex()
 
         <ChanTrang daTai={dsHienThi.length} tongSo={dsPokemon.length}/>
 
-        {pokemonDangXem && <ModalChiTiet pokemon={pokemonDangXem} onDong={dongChiTiet} />}
+        {pokemonDangXem && <ModalChiTiet pokemon={pokemonDangXem} coTheTiepTheo={dsHienThi[dsHienThi.length-1] !== pokemonDangXem} onDong={dongChiTiet} onTiepTheo={tiepTheo}/>}
         </div>
     );
 }
