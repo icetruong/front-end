@@ -4,10 +4,16 @@ import styles from "./DongViec.module.css";
 
 type DongViecProps = {
     viec: Viec,
+    dangSua: boolean,
+    banNhap: string,
     onBatTat: (id: number) => void,
     onVietHoa: (id: number) => void,
     onDuaLenDau: (id: number) => void,
-    onXoa: (id: number) => void
+    onXoa: (id: number) => void,
+    onBatDauSua: (viec: Viec) => void,
+    onDoiBanNhap: (noiDung: string) => void,
+    onLuuSua: () => void,
+    onHuySua: () => void
 };
 
 function cx(...lop: (string | null | undefined | false)[])
@@ -15,8 +21,43 @@ function cx(...lop: (string | null | undefined | false)[])
     return lop.filter(Boolean).join(" ");
 }
 
-export function DongViec({ viec, onBatTat, onVietHoa, onDuaLenDau, onXoa }: DongViecProps)
+export function DongViec({
+    viec, dangSua, banNhap,
+    onBatTat, onVietHoa, onDuaLenDau, onXoa,
+    onBatDauSua, onDoiBanNhap, onLuuSua, onHuySua
+}: DongViecProps)
 {
+    function xuLyGui(e: React.FormEvent<HTMLFormElement>)
+    {
+        e.preventDefault();
+        onLuuSua();
+    }
+
+    function xuLyPhim(e: React.KeyboardEvent<HTMLInputElement>)
+    {
+        if(e.key === "Escape")
+            onHuySua();
+    }
+
+    // Vẫn trả về <li> ở cả hai chế độ: con trực tiếp của <ul> phải là <li>
+    if(dangSua)
+        return (
+            <li className={styles.dong}>
+                <form onSubmit={xuLyGui}>
+                    <input
+                        type="text"
+                        aria-label="Sửa nội dung việc"
+                        value={banNhap}
+                        onChange={(e) => onDoiBanNhap(e.target.value)}
+                        onKeyDown={xuLyPhim}
+                        autoFocus
+                    />
+                    <button type="submit">Lưu</button>
+                    <button type="button" onClick={onHuySua}>Hủy</button>
+                </form>
+            </li>
+        );
+
     return (
         <li className={styles.dong}>
             <button
@@ -35,6 +76,7 @@ export function DongViec({ viec, onBatTat, onVietHoa, onDuaLenDau, onXoa }: Dong
             <div className={styles["hanh-dong"]}>
                 <Nut kichThuoc="nho" bienThe="vien" onClick={() => onVietHoa(viec.id)}>Viết hoa</Nut>
                 <Nut kichThuoc="nho" bienThe="vien" onClick={() => onDuaLenDau(viec.id)}>Lên đầu</Nut>
+                <Nut kichThuoc="nho" bienThe="vien" onClick={() => onBatDauSua(viec)}>Sửa</Nut>
                 <Nut kichThuoc="nho" bienThe="nguy-hiem" onClick={() => onXoa(viec.id)}>Xóa</Nut>
             </div>
         </li>

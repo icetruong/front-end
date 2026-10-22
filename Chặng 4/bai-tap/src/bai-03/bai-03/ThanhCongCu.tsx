@@ -12,16 +12,18 @@ type ThanhCongCuProps = {
     boLoc: BoLoc,
     soChuaXong: number,
     tongSo: number,
+    noiDungTimKiem: string,
     onDoiBoLoc: (boLoc: BoLoc) => void,
     onSapXep: () => void,
     onDaoThuTu: () => void,
     onXoaDaXong: () => void,
-    onXemLichSu: () => void
+    onXemLichSu: () => void,
+    onTimKiem: (timKiem: string) => void
 };
 
 export function ThanhCongCu({
-    boLoc, soChuaXong, tongSo,
-    onDoiBoLoc, onSapXep, onDaoThuTu, onXoaDaXong, onXemLichSu
+    boLoc, soChuaXong, tongSo, noiDungTimKiem, 
+    onDoiBoLoc, onSapXep, onDaoThuTu, onXoaDaXong, onXemLichSu, onTimKiem
 }: ThanhCongCuProps)
 {
     return (
@@ -48,6 +50,15 @@ export function ThanhCongCu({
                 <Nut kichThuoc="nho" bienThe="nguy-hiem" onClick={onXoaDaXong}>Xóa đã xong</Nut>
                 <Nut kichThuoc="nho" bienThe="vien" onClick={onXemLichSu}>Xem lịch sử</Nut>
             </div>
+
+            {/* Không giữ state riêng: giá trị lấy thẳng từ cha, gõ tới đâu báo cha tới đó → lọc ngay */}
+            <input
+                type="search"
+                aria-label="Tìm việc"
+                placeholder="Tìm việc..."
+                value={noiDungTimKiem}
+                onChange={(e) => onTimKiem(e.target.value)}
+            />
         </div>
     );
 }

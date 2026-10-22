@@ -27,21 +27,35 @@ export function DanhSachViec()
     // TODO: state điều kiện lọc
     // TODO: danh sách hiển thị + bộ đếm TÍNH trong lúc render
     const [boLoc, setBoLoc] = useState<BoLoc>("tat-ca");
+    const [noiDungTimKiem, setNoiDungTimKiem] = useState("");
+    // Chỉ một dòng được sửa tại một thời điểm → lưu id dòng đó, null = không sửa dòng nào
+    const [idDangSua, setIdDangSua] = useState<number | null>(null);
+    const [banNhap, setBanNhap] = useState("");
     
     const dsHienThi = getDsHienThi();
     const soChuaXong = tinhSoChuaXong();
     const tongSo = ds.length;
     function getDsHienThi() : Viec[]
     {
+        let hienThi: Viec[] = ds;
         switch(boLoc)
         {
             case "tat-ca":
-                return ds;
+                hienThi = ds;
+                break;
             case "chua-xong":
-                return ds.filter((viec) => !viec.daXong);
+                hienThi = ds.filter((viec) => !viec.daXong);
+                break;
             case "da-xong":
-                return ds.filter((viec) => viec.daXong);
+                hienThi = ds.filter((viec) => viec.daXong);
+                break;
         }
+
+        // includes: khớp ở bất kỳ đâu; đưa cả hai vế về chữ thường để "đi" vẫn ra "Đi chợ"
+        const tuKhoa = noiDungTimKiem.trim().toLocaleLowerCase("vi");
+        hienThi = hienThi.filter((viec) => viec.noiDung.toLocaleLowerCase("vi").includes(tuKhoa));
+
+        return hienThi;
     }
 
     function tinhSoChuaXong() : number
@@ -117,6 +131,27 @@ export function DanhSachViec()
         });
     }
 
+    // Lấy nội dung HIỆN TẠI của việc ngay lúc bấm Sửa → không bao giờ hiện bản cũ
+    function batDauSua(viec: Viec)
+    {
+        setIdDangSua(viec.id);
+        setBanNhap(viec.noiDung);
+    }
+
+    function huySua()
+    {
+        setIdDangSua(null);
+    }
+
+    function luuSua()
+    {
+        const noiDung = banNhap.trim();
+        // Sửa thành rỗng thì coi như hủy, giữ nguyên nội dung cũ
+        if(idDangSua !== null && noiDung !== "")
+            setDs((d) => d.map((viec) => viec.id === idDangSua ? {...viec, noiDung} : viec));
+        setIdDangSua(null);
+    }
+
     return (
         <The dauThe="Danh sách việc">
             <div className={styles.khung}>
@@ -126,21 +161,27 @@ export function DanhSachViec()
                     boLoc={boLoc}
                     soChuaXong={soChuaXong}
                     tongSo={tongSo}
+                    noiDungTimKiem={noiDungTimKiem}
                     onDoiBoLoc={(boLoc) => {setBoLoc(boLoc)}}
                     onSapXep={() => {sapXep()}}
                     onDaoThuTu={() => {daoThuTu()}}
                     onXoaDaXong={() => {xoaCacViecDaXong()}}
                     onXemLichSu={() => {xemLichSu()}}
+                    onTimKiem={(timKiem) => {setNoiDungTimKiem(timKiem)}}
                 />
 
                 {dsHienThi.length === 0 ? (
-                    <p className={styles.rong}>Chưa có việc nào.</p>
+                    <p className={styles.rong}>
+                        {tongSo === 0 ? "Chưa có việc nào." : "Không có việc nào khớp."}
+                    </p>
                 ) : (
                     <ul className={styles["danh-sach"]}>
                         {dsHienThi.map((viec) => (
                             <DongViec
                                 key={viec.id}
                                 viec={viec}
+                                dangSua={viec.id === idDangSua}
+                                banNhap={banNhap}
                                 onBatTat={(id) => {
                                     if (DUNG_CACH_SAI) batTatCachSai(id);
                                     else batTatHoanThanh(id);
@@ -148,6 +189,10 @@ export function DanhSachViec()
                                 onVietHoa={(id) => {doiTen(id)}}
                                 onDuaLenDau={(id) => {duaLenDau(id)}}
                                 onXoa={(id) => {xoaViec(id)}}
+                                onBatDauSua={(viec) => {batDauSua(viec)}}
+                                onDoiBanNhap={(noiDung) => {setBanNhap(noiDung)}}
+                                onLuuSua={() => {luuSua()}}
+                                onHuySua={() => {huySua()}}
                             />
                         ))}
                     </ul>

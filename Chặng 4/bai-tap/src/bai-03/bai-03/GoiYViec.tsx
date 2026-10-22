@@ -1,16 +1,6 @@
-import { Nut } from "../../bai-02/ui/Nut";
+import { useState } from "react";
 import styles from "./GoiYViec.module.css";
 
-const CAC_GOI_Y = [
-    "Học useState",
-    "Đi chợ",
-    "Tập thể dục",
-    "Đọc sách",
-    "Rửa bát",
-    "Ôn lại closure",
-    "Ăn tối",
-    "Bài tập React",
-];
 
 type GoiYViecProps = {
     onChon: (noiDung: string) => void
@@ -18,14 +8,28 @@ type GoiYViecProps = {
 
 export function GoiYViec({ onChon }: GoiYViecProps)
 {
+    const [viec, setViec] = useState("");
+
+    function xuLyGui(e: React.FormEvent<HTMLFormElement>)
+    {
+        e.preventDefault();
+
+        if (!viec.trim()) {
+            alert("Vui lòng điền nội dung công việc!"); // (Tùy chọn) Thông báo cho người dùng
+            return; 
+        }
+
+    // 3. Nếu hợp lệ thì mới gửi đi (có thể gửi chuỗi đã trim sạch sẽ)
+        onChon(viec.trim());
+
+        setViec("");
+    }
     return (
         <div className={styles["goi-y"]}>
-            <span className={styles.nhan}>Bấm để thêm:</span>
-            {CAC_GOI_Y.map((goiY) => (
-                <Nut key={goiY} kichThuoc="nho" bienThe="vien" onClick={() => onChon(goiY)}>
-                    + {goiY}
-                </Nut>
-            ))}
+            <form onSubmit={xuLyGui}>
+                <input type="text" value={viec} onChange={(e) => setViec(e.target.value)}/>
+                <button type="submit">Thêm việc</button>
+            </form>
         </div>
     );
 }
