@@ -4,7 +4,8 @@ import { GoiYViec } from "./GoiYViec";
 import type { BoLoc, Viec } from "./kieu";
 import { ThanhCongCu } from "./ThanhCongCu";
 import styles from "./DanhSachViec.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { kho } from "./kho";
 
 // Dữ liệu giả để giao diện có cái hiển thị — thay bằng state của bạn
 const DU_LIEU_GIA: Viec[] = [
@@ -18,12 +19,34 @@ const mangLucTai = DU_LIEU_GIA;
 
 // Công tắc thí nghiệm: true = bật/tắt bằng cách SAI, false = cách ĐÚNG.
 // Quan sát xong thì đổi về false — đó là bước "khôi phục cách đúng" của đề.
-const DUNG_CACH_SAI = true;
+const DUNG_CACH_SAI = false;
+
+// Kiểm tra MỘT việc: phải là object (không phải null) và đủ 3 trường đúng kiểu
+function laViec(x: unknown) : x is Viec
+{
+    return (
+        typeof x === "object" && x !== null &&
+        "id" in x && typeof x.id === "number" &&
+        "noiDung" in x && typeof x.noiDung === "string" &&
+        "daXong" in x && typeof x.daXong === "boolean"
+    );
+}
+
+// Kiểm tra cả danh sách: phải là mảng, và MỌI phần tử đều là việc hợp lệ
+function laDsViec(x: unknown) : x is Viec[]
+{
+    return Array.isArray(x) && x.every(laViec);
+}
+
+function docDsTuKho()
+{
+    return kho.doc("ds-viec", DU_LIEU_GIA, laDsViec);
+}
 
 export function DanhSachViec()
 {
     // TODO: state ds: Viec[]
-    const[ds, setDs] = useState<Viec[]>(DU_LIEU_GIA);
+    const[ds, setDs] = useState<Viec[]>(docDsTuKho);
     // TODO: state điều kiện lọc
     // TODO: danh sách hiển thị + bộ đếm TÍNH trong lúc render
     const [boLoc, setBoLoc] = useState<BoLoc>("tat-ca");
@@ -35,6 +58,32 @@ export function DanhSachViec()
     const dsHienThi = getDsHienThi();
     const soChuaXong = tinhSoChuaXong();
     const tongSo = ds.length;
+
+    useEffect(() => {
+        kho.ghi("ds-viec", ds);
+    }, [ds]);
+
+    useEffect(() => {
+        function xuLyLuu(e: StorageEvent)
+        {
+            if(e.key === "ds-viec")
+            {
+                setDs(docDsTuKho());
+            }
+        }
+        window.addEventListener("storage", xuLyLuu);
+
+        return () => window.removeEventListener("storage", xuLyLuu);
+    }, []);
+
+    useEffect(() => {
+        const tieuDeTruoc = document.title;
+
+        document.title = `(${soChuaXong}) Việc cần làm`;
+
+        return () => {document.title = tieuDeTruoc};
+    }, [soChuaXong])
+
     function getDsHienThi() : Viec[]
     {
         let hienThi: Viec[] = ds;
