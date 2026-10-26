@@ -488,7 +488,7 @@ Hai ô nhập: VNĐ và USD. Gõ vào ô nào, ô kia tự cập nhật theo t�
 
 Câu 2 là phần đáng suy nghĩ nhất. Ghi lại vì sao lưu "ô vừa gõ" giải quyết được vấn đề số thập phân bị làm tròn nhảy qua nhảy lại giữa hai ô.
 
-### Bài 3 — Refactor ứng dụng có state rải rác (bài chính) -> chưa xong còn lỗi
+### Bài 3 — Refactor ứng dụng có state rải rác (bài chính)
 
 Dưới đây là một ứng dụng chạy được nhưng state đặt sai chỗ khắp nơi. Đọc, chỉ ra vấn đề, rồi viết lại.
 
