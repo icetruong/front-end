@@ -1,0 +1,110 @@
+.khung {
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  height: 420px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.dau-khung {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tieu-de {
+  margin: 0;
+  font-size: 1rem;
+  color: #111827;
+}
+
+.nut-phu {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111827;
+  font: inherit;
+  cursor: pointer;
+}
+
+.nut-phu:hover {
+  background: #f3f4f6;
+}
+
+/* min-height: 0 để phần tử con trong flex được co lại và cuộn được */
+.vung-tin {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.danh-tin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 1rem;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.tin {
+  align-self: flex-start;
+  max-width: 75%;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.cua-toi {
+  align-self: flex-end;
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.nut-tin-moi {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.25rem 0.75rem;
+  border: none;
+  border-radius: 999px;
+  background: #111827;
+  color: #ffffff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.o-soan {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.o-nhap {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.nut-gui {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: #ffffff;
+  font: inherit;
+  cursor: pointer;
+}

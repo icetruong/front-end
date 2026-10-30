@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Nut } from "../../bai-02/ui/Nut";
 import type { Viec } from "./kieu";
 import styles from "./DongViec.module.css";
@@ -27,6 +28,25 @@ export function DongViec({
     onBatDauSua, onDoiBanNhap, onLuuSua, onHuySua
 }: DongViecProps)
 {
+    const oSuaRef = useRef<HTMLInputElement>(null);
+    const nutSuaRef = useRef<HTMLButtonElement>(null);
+    // Cờ: vừa nhấn Escape → chỉ khi đó mới trả focus về nút Sửa
+    const canTraFocus = useRef(false);
+
+    // Chạy sau commit: lúc này ô sửa hoặc nút Sửa đã có trong DOM
+    useEffect(() => {
+        if(dangSua)
+        {
+            oSuaRef.current?.focus();
+            oSuaRef.current?.select();
+        }
+        else if(canTraFocus.current)
+        {
+            canTraFocus.current = false;
+            nutSuaRef.current?.focus();
+        }
+    }, [dangSua]);
+
     function xuLyGui(e: React.FormEvent<HTMLFormElement>)
     {
         e.preventDefault();
@@ -36,7 +56,10 @@ export function DongViec({
     function xuLyPhim(e: React.KeyboardEvent<HTMLInputElement>)
     {
         if(e.key === "Escape")
+        {
+            canTraFocus.current = true;
             onHuySua();
+        }
     }
 
     // Vẫn trả về <li> ở cả hai chế độ: con trực tiếp của <ul> phải là <li>
@@ -45,12 +68,12 @@ export function DongViec({
             <li className={styles.dong}>
                 <form onSubmit={xuLyGui}>
                     <input
+                        ref={oSuaRef}
                         type="text"
                         aria-label="Sửa nội dung việc"
                         value={banNhap}
                         onChange={(e) => onDoiBanNhap(e.target.value)}
                         onKeyDown={xuLyPhim}
-                        autoFocus
                     />
                     <button type="submit">Lưu</button>
                     <button type="button" onClick={onHuySua}>Hủy</button>
@@ -76,7 +99,7 @@ export function DongViec({
             <div className={styles["hanh-dong"]}>
                 <Nut kichThuoc="nho" bienThe="vien" onClick={() => onVietHoa(viec.id)}>Viết hoa</Nut>
                 <Nut kichThuoc="nho" bienThe="vien" onClick={() => onDuaLenDau(viec.id)}>Lên đầu</Nut>
-                <Nut kichThuoc="nho" bienThe="vien" onClick={() => onBatDauSua(viec)}>Sửa</Nut>
+                <Nut ref={nutSuaRef} kichThuoc="nho" bienThe="vien" onClick={() => onBatDauSua(viec)}>Sửa</Nut>
                 <Nut kichThuoc="nho" bienThe="nguy-hiem" onClick={() => onXoa(viec.id)}>Xóa</Nut>
             </div>
         </li>

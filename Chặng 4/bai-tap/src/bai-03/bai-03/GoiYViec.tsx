@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./GoiYViec.module.css";
 
 
@@ -9,6 +9,7 @@ type GoiYViecProps = {
 export function GoiYViec({ onChon }: GoiYViecProps)
 {
     const [viec, setViec] = useState("");
+    const oNhapRef = useRef<HTMLInputElement>(null);
 
     function xuLyGui(e: React.FormEvent<HTMLFormElement>)
     {
@@ -23,11 +24,13 @@ export function GoiYViec({ onChon }: GoiYViecProps)
         onChon(viec.trim());
 
         setViec("");
+
+        oNhapRef.current?.focus();
     }
     return (
         <div className={styles["goi-y"]}>
             <form onSubmit={xuLyGui}>
-                <input type="text" value={viec} onChange={(e) => setViec(e.target.value)}/>
+                <input ref={oNhapRef} type="text" value={viec} onChange={(e) => setViec(e.target.value)}/>
                 <button type="submit">Thêm việc</button>
             </form>
         </div>

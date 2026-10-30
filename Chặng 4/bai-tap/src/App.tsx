@@ -5,6 +5,9 @@ import viteLogo from "./assets/vite.svg";
 import "./App.css";
 import DoanRender from "./bai-01/DoanRender";
 import { Pokedex } from "./bai-02/bai-06/Pokedex";
+import { HaiDongHo } from "./bai-08/HaiDongHo";
+import { DanhSachViec } from "./bai-03/bai-03/DanhSachViec";
+import { KhungChat } from "./bai-08/KhungChat";
 
 // let dem = 0;
 
@@ -149,6 +152,9 @@ function App() {
       <section id="spacer"></section>
       <DoanRender />
       <Pokedex />
+      <HaiDongHo />
+      <DanhSachViec />
+      <KhungChat />
       {/* <Khach />
       <Khach />
       <Khach />
